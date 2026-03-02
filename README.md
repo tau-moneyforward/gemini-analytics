@@ -12,6 +12,7 @@ AI チャット（Gemini、ChatGPT 等）の会話ログを:
 
 ## 前提
 
+- [Node.js](https://nodejs.org/) がインストールされていること（ダッシュボード閲覧時に `npx` を使用）
 - [Claude Code](https://docs.anthropic.com/en/docs/claude-code) がインストールされていること
 - このリポジトリを **フォーク** し、フォーク先をクローンしてリポジトリルートで Claude Code を開くこと
 
