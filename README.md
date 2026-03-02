@@ -13,7 +13,7 @@ AI チャット（Gemini、ChatGPT 等）の会話ログを:
 ## 前提
 
 - [Claude Code](https://docs.anthropic.com/en/docs/claude-code) がインストールされていること
-- このリポジトリをクローンし、リポジトリルートで Claude Code を開くこと
+- このリポジトリを **フォーク** し、フォーク先をクローンしてリポジトリルートで Claude Code を開くこと
 
 ## 使い方
 
@@ -21,7 +21,13 @@ AI チャット（Gemini、ChatGPT 等）の会話ログを:
 
 AI チャットの会話ログを Markdown ファイルとしてエクスポートする。1ファイル = 1セッション（スレッド）。
 
-Gemini の場合は Google Takeout などでエクスポートした会話を、セッションごとに `.md` ファイルに分割する。形式は以下の通り:
+Gemini の場合、Chrome 拡張 [AI Exporter](https://chromewebstore.google.com/detail/ai-exporter-save-chatgpt/kagjkiiecagemklhmhkabbalfpbianbe) を使うと手軽にエクスポートできる:
+
+1. 拡張をインストールし、Gemini の会話ページを開く
+2. 拡張のアイコンをクリックし、**Markdown** 形式でエクスポートする
+3. ダウンロードされた `.md` ファイルを `workspace/` に配置する
+
+エクスポートされるファイルの形式は以下の通り:
 
 ```markdown
 # you asked
