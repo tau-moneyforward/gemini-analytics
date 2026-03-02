@@ -26,7 +26,7 @@ Gemini の場合、Chrome 拡張 [AI Exporter](https://chromewebstore.google.com
 
 1. 拡張をインストールし、Gemini の会話ページを開く
 2. 拡張のアイコンをクリックし、**Markdown** 形式でエクスポートする
-3. ダウンロードされた `.md` ファイルを `workspace/` に配置する
+3. ダウンロードされた `.md` ファイルを `workspace/sessions/` に配置する
 
 エクスポートされるファイルの形式は以下の通り:
 
@@ -51,13 +51,13 @@ AIの応答
 ### 2. ログを配置する
 
 ```bash
-workspace/
+workspace/sessions/
 ├── session-1.md
 ├── session-2.md
 └── ...
 ```
 
-エクスポートした `.md` ファイルを `workspace/` ディレクトリに配置する。
+エクスポートした `.md` ファイルを `workspace/sessions/` ディレクトリに配置する。
 
 ### 3. トピックを抽出する
 
@@ -160,8 +160,9 @@ cd workspace && npx serve .
 │   ├── crosstab.html
 │   ├── hygiene.html
 │   └── rawdata.html
-└── workspace/             ← 作業ディレクトリ（ここに会話ログを置く）
-    └── .gitkeep
+└── workspace/             ← 作業ディレクトリ
+    └── sessions/          ← ここに会話ログ .md を配置する（入力）
+        └── .gitkeep
 ```
 
 ## データスキーマ
