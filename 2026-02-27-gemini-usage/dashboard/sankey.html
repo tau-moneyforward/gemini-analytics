@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>サンキーダイアグラム — 何をしてほしかったか→プロンプト情報→結末</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .page-nav {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .page-nav a {
+      color: var(--accent);
+      text-decoration: none;
+      font-size: 0.85rem;
+      padding: 0.35rem 0.85rem;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+    }
+    .page-nav a:hover { background: var(--surface-hover); }
+    .page-nav a.current { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+    .sankey-wrap {
+      width: 100%;
+      overflow-x: auto;
+    }
+    #sankey-chart {
+      min-height: 700px;
+    }
+    .sankey-tooltip {
+      position: absolute;
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 0.5rem 0.75rem;
+      font-size: 0.8rem;
+      pointer-events: none;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      z-index: 10;
+      display: none;
+    }
+    .node-label {
+      font-size: 12px;
+      fill: var(--text);
+      font-weight: 500;
+    }
+    .legend-sankey {
+      display: flex;
+      gap: 1.5rem;
+      margin-bottom: 1rem;
+      font-size: 0.82rem;
+      flex-wrap: wrap;
+    }
+    .legend-sankey .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .legend-sankey .legend-dot {
+      width: 14px;
+      height: 14px;
+      border-radius: 3px;
+    }
+    .flow-desc {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      margin-bottom: 1rem;
+      line-height: 1.6;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header-content">
+      <h1>サンキーダイアグラム</h1>
+      <p class="subtitle">何をしてほしかったか → プロンプトに含めた情報 → 結末 のフロー</p>
+    </div>
+  </header>
+
+  <main>
+    <nav class="page-nav">
+      <a href="index.html">集計ダッシュボード</a>
+      <a href="correlation.html">クロス分析</a>
+      <a href="sankey.html" class="current">サンキーダイアグラム</a>
+      <a href="reference.html">類型リファレンス</a>
+    </nav>
+
+    <section class="chart-card">
+      <h2>295トピックのフロー: 何をしてほしかったか → プロンプト情報 → 結末</h2>
+      <p class="flow-desc">
+        左列: AI に何をしてほしかったか<br>
+        中列: プロンプトにどのような情報を含めたか<br>
+        右列: 結末パターン（7種）<br>
+        帯の太さがトピック件数に対応。太い帯の流れに注目してください。
+      </p>
+      <div class="legend-sankey">
+        <div class="legend-item"><span class="legend-dot" style="background:#60a5fa"></span> 一発承認</div>
+        <div class="legend-item"><span class="legend-dot" style="background:#34d399"></span> 追加深掘り</div>
+        <div class="legend-item"><span class="legend-dot" style="background:#a78bfa"></span> 修正リファイン</div>
+        <div class="legend-item"><span class="legend-dot" style="background:#f472b6"></span> エラー指摘</div>
+        <div class="legend-item"><span class="legend-dot" style="background:#fb923c"></span> 反論・議論</div>
+        <div class="legend-item"><span class="legend-dot" style="background:#fbbf24"></span> トピック転換</div>
+        <div class="legend-item"><span class="legend-dot" style="background:#94a3b8"></span> 放棄</div>
+      </div>
+      <div class="sankey-wrap">
+        <div id="sankey-chart"></div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>分析日: 2026-02-27 | D3.js + d3-sankey で描画</p>
+  </footer>
+
+  <div class="sankey-tooltip" id="tooltip"></div>
+
+  <script src="data.js"></script>
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <script src="https://unpkg.com/d3-sankey@0.12.3/dist/d3-sankey.min.js"></script>
+  <script src="sankey.js"></script>
+</body>
+</html>

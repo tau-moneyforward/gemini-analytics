@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>スレッド衛生分析 — Gemini AI 活用分析</title>
+<link rel="stylesheet" href="common.css">
+<style>
+.hero { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; margin-bottom: 2rem; }
+.hero-card { background: #fff; border-radius: 12px; padding: 1.75rem; box-shadow: 0 1px 3px rgba(0,0,0,.08); }
+.hero-card h2 { font-size: 1.25rem; font-weight: 700; margin-bottom: 1rem; line-height: 1.4; }
+.hero-card h2 .accent-clean { color: #16a34a; }
+.hero-card h2 .accent-dirty { color: #dc2626; }
+.hero-nums { display: flex; gap: 1rem; margin-bottom: 1rem; align-items: baseline; }
+.hero-num { font-size: 2.5rem; font-weight: 800; line-height: 1; }
+.hero-num-label { font-size: .85rem; color: #6b7280; }
+.bar-track { height: 28px; background: #f3f4f6; border-radius: 6px; overflow: hidden; display: flex; }
+.bar-fill { display: flex; align-items: center; justify-content: center; font-size: .75rem; font-weight: 600; color: #fff; min-width: 32px; transition: width .6s ease; }
+.bar-label-row { display: flex; justify-content: space-between; font-size: .75rem; color: #6b7280; margin-top: .35rem; }
+
+.section { margin-bottom: 2rem; }
+.section-title { font-size: 1.15rem; font-weight: 700; margin-bottom: .75rem; }
+.section-desc { font-size: .875rem; color: #6b7280; margin-bottom: 1rem; }
+.treemap-wrap { background: #fff; border-radius: 12px; padding: 1.25rem; box-shadow: 0 1px 3px rgba(0,0,0,.08); }
+.treemap-container { position: relative; width: 100%; }
+.treemap-canvas { display: block; width: 100%; border-radius: 6px; }
+.treemap-tooltip {
+  position: fixed; pointer-events: none; background: rgba(0,0,0,.85); color: #fff;
+  font-size: .8rem; padding: .45rem .7rem; border-radius: 6px; white-space: nowrap;
+  opacity: 0; transition: opacity .12s; z-index: 100; line-height: 1.4;
+}
+.treemap-legend { display: flex; flex-wrap: wrap; gap: 1rem; margin-top: .75rem; font-size: .8rem; color: #6b7280; }
+.legend-item { display: flex; align-items: center; gap: .35rem; }
+.legend-swatch { width: 14px; height: 14px; border-radius: 3px; flex-shrink: 0; }
+
+.table-wrap { background: #fff; border-radius: 12px; padding: 1.25rem; box-shadow: 0 1px 3px rgba(0,0,0,.08); overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: .875rem; }
+th { text-align: left; padding: .6rem .75rem; border-bottom: 2px solid #e5e7eb; color: #6b7280; font-weight: 600; white-space: nowrap; }
+td { padding: .6rem .75rem; border-bottom: 1px solid #f3f4f6; }
+tr.worst td { background: #fef2f2; font-weight: 600; }
+tr.worst td:first-child { color: #dc2626; }
+td.num { text-align: right; font-variant-numeric: tabular-nums; }
+
+.message-box {
+  background: #fffbeb; border-left: 4px solid #f59e0b;
+  border-radius: 0 12px 12px 0; padding: 1.5rem 1.75rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,.06);
+}
+.message-box p { font-size: .925rem; line-height: 1.75; }
+.message-box p + p { margin-top: .75rem; }
+.message-box strong { color: #92400e; }
+
+@media (max-width: 700px) {
+  .hero { grid-template-columns: 1fr; }
+  .hero-num { font-size: 2rem; }
+}
+</style>
+</head>
+<body>
+
+<nav class="top-nav">
+  <div class="nav-inner">
+    <a href="definitions.html">定義</a>
+    <a href="crosstab.html">クロス集計</a>
+    <a href="hygiene.html" class="active">スレッド衛生</a>
+    <a href="rawdata.html">生データ</a>
+  </div>
+</nav>
+
+<div class="page-scroll">
+<div class="container">
+  <h1>スレッド衛生分析</h1>
+  <p class="page-subtitle" id="hygiene-subtitle">セッションのトピック混在状況を可視化する</p>
+
+  <div class="hero" id="hero"></div>
+
+  <section class="section">
+    <h2 class="section-title">セッション規模マップ</h2>
+    <p class="section-desc">各セッションを面積＝トピック数で可視化。少数の巨大スレッドが全体を支配していることが一目でわかる。</p>
+    <div class="treemap-wrap">
+      <div class="treemap-container">
+        <canvas id="treemap" class="treemap-canvas"></canvas>
+        <div class="treemap-tooltip" id="tooltip"></div>
+      </div>
+      <div class="treemap-legend" id="legend"></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2 class="section-title">パレート図：セッションごとのトピック集中</h2>
+    <p class="section-desc">棒グラフはセッションのトピック数（左から多い順）。青い曲線は累積トピック割合（右軸）。</p>
+    <div class="treemap-wrap">
+      <div class="treemap-container">
+        <canvas id="pareto" class="treemap-canvas"></canvas>
+        <div class="treemap-tooltip" id="pareto-tooltip"></div>
+      </div>
+    </div>
+  </section>
+
+</div>
+</div>
+
+<script src="data-v3.js"></script>
+<script>
+(function() {
+  var meta = window.__STATS_16__.metadata.thread_hygiene;
+  var sessions = window.__HYGIENE__.sessions;
+  var total = meta.total_sessions;
+  var clean = meta.clean_sessions;
+  var dirty = meta.contaminated_sessions;
+  var cleanTopics = meta.clean_topic_count;
+  var dirtyTopics = meta.contaminated_topic_count;
+  var totalTopics = cleanTopics + dirtyTopics;
+  var cleanPct = Math.round(clean / total * 100);
+  var dirtyTopicPct = Math.round(dirtyTopics / totalTopics * 100);
+
+  // 1. Hero
+  document.getElementById('hero').innerHTML =
+    '<div class="hero-card">' +
+      '<h2><span class="accent-clean">' + cleanPct + '%</span> のセッションはきれい</h2>' +
+      '<div class="hero-nums">' +
+        '<div><span class="hero-num">' + clean + '</span><div class="hero-num-label">クリーン (1–2 トピック)</div></div>' +
+        '<div><span class="hero-num" style="color:#f97316">' + dirty + '</span><div class="hero-num-label">汚染 (3+ トピック)</div></div>' +
+      '</div>' +
+      '<div class="bar-track">' +
+        '<div class="bar-fill" style="width:' + cleanPct + '%;background:#16a34a">' + cleanPct + '%</div>' +
+        '<div class="bar-fill" style="width:' + (100 - cleanPct) + '%;background:#f97316">' + (100 - cleanPct) + '%</div>' +
+      '</div>' +
+      '<div class="bar-label-row"><span>' + clean + ' セッション</span><span>' + dirty + ' セッション</span></div>' +
+    '</div>' +
+    '<div class="hero-card">' +
+      '<h2>でも <span class="accent-dirty">' + dirtyTopicPct + '%</span> のトピックは汚染セッションに集中</h2>' +
+      '<div class="hero-nums">' +
+        '<div><span class="hero-num" style="color:#6b7280">' + cleanTopics + '</span><div class="hero-num-label">クリーンに所属</div></div>' +
+        '<div><span class="hero-num" style="color:#dc2626">' + dirtyTopics + '</span><div class="hero-num-label">汚染に集中</div></div>' +
+      '</div>' +
+      '<div class="bar-track">' +
+        '<div class="bar-fill" style="width:' + (100 - dirtyTopicPct) + '%;background:#9ca3af">' + (100 - dirtyTopicPct) + '%</div>' +
+        '<div class="bar-fill" style="width:' + dirtyTopicPct + '%;background:#dc2626">' + dirtyTopicPct + '%</div>' +
+      '</div>' +
+      '<div class="bar-label-row"><span>' + cleanTopics + ' トピック</span><span>' + dirtyTopics + ' トピック</span></div>' +
+    '</div>';
+
+  // 2. Treemap (squarified)
+  function colorFor(tc) {
+    if (tc <= 2) return '#e5e7eb';
+    if (tc <= 4) return '#fed7aa';
+    if (tc <= 7) return '#fb923c';
+    if (tc <= 10) return '#ea580c';
+    return '#dc2626';
+  }
+
+  var canvas = document.getElementById('treemap');
+  var ctx = canvas.getContext('2d');
+  var tooltip = document.getElementById('tooltip');
+  var dpr = window.devicePixelRatio || 1;
+  var rects = [];
+
+  function layoutTreemap() {
+    var containerW = canvas.parentElement.clientWidth;
+    var areaPerTopic = (containerW * containerW * 0.5) / totalTopics;
+    var totalArea = containerW * Math.max(300, Math.sqrt(areaPerTopic * totalTopics));
+    var h = Math.max(350, Math.min(600, totalArea / containerW));
+
+    canvas.style.height = h + 'px';
+    canvas.width = containerW * dpr;
+    canvas.height = h * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+    var W = containerW;
+    var H = h;
+
+    var sorted = sessions.slice().sort(function(a, b) { return b.topic_count - a.topic_count; });
+    var areas = sorted.map(function(s) { return s.topic_count / totalTopics * W * H; });
+
+    rects = squarify(areas, {x: 0, y: 0, w: W, h: H});
+
+    ctx.clearRect(0, 0, W, H);
+    for (var i = 0; i < rects.length; i++) {
+      var r = rects[i];
+      r.session = sorted[i];
+      ctx.fillStyle = colorFor(sorted[i].topic_count);
+      ctx.fillRect(r.x + 1, r.y + 1, r.w - 2, r.h - 2);
+
+      if (r.w > 50 && r.h > 28) {
+        ctx.fillStyle = sorted[i].topic_count <= 2 ? '#9ca3af' : '#fff';
+        ctx.font = 'bold ' + Math.min(14, Math.max(9, r.w / 8)) + 'px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        var label = sorted[i].topic_count + '';
+        ctx.fillText(label, r.x + r.w / 2, r.y + r.h / 2);
+      }
+    }
+  }
+
+  function squarify(areas, rect) {
+    if (areas.length === 0) return [];
+    if (areas.length === 1) return [{x: rect.x, y: rect.y, w: rect.w, h: rect.h}];
+    return layoutRow(areas, rect);
+  }
+
+  function layoutRow(areas, rect) {
+    var results = [];
+    var remaining = areas.slice();
+    var currentRect = {x: rect.x, y: rect.y, w: rect.w, h: rect.h};
+
+    while (remaining.length > 0) {
+      var shortSide = Math.min(currentRect.w, currentRect.h);
+      var row = [remaining[0]];
+      remaining = remaining.slice(1);
+
+      var bestRatio = worstRatio(row, shortSide);
+
+      while (remaining.length > 0) {
+        var test = row.concat([remaining[0]]);
+        var newRatio = worstRatio(test, shortSide);
+        if (newRatio <= bestRatio) {
+          row = test;
+          remaining = remaining.slice(1);
+          bestRatio = newRatio;
+        } else {
+          break;
+        }
+      }
+
+      var rowSum = 0;
+      for (var i = 0; i < row.length; i++) rowSum += row[i];
+
+      var horizontal = currentRect.w >= currentRect.h;
+      var rowSize = rowSum / (horizontal ? currentRect.h : currentRect.w);
+      var offset = 0;
+
+      for (var j = 0; j < row.length; j++) {
+        var size = row[j] / rowSize;
+        if (horizontal) {
+          results.push({x: currentRect.x, y: currentRect.y + offset, w: rowSize, h: size});
+        } else {
+          results.push({x: currentRect.x + offset, y: currentRect.y, w: size, h: rowSize});
+        }
+        offset += size;
+      }
+
+      if (horizontal) {
+        currentRect = {x: currentRect.x + rowSize, y: currentRect.y, w: currentRect.w - rowSize, h: currentRect.h};
+      } else {
+        currentRect = {x: currentRect.x, y: currentRect.y + rowSize, w: currentRect.w, h: currentRect.h - rowSize};
+      }
+    }
+    return results;
+  }
+
+  function worstRatio(row, side) {
+    var sum = 0;
+    for (var i = 0; i < row.length; i++) sum += row[i];
+    var worst = 0;
+    for (var j = 0; j < row.length; j++) {
+      var r = Math.max(
+        (side * side * row[j]) / (sum * sum),
+        (sum * sum) / (side * side * row[j])
+      );
+      if (r > worst) worst = r;
+    }
+    return worst;
+  }
+
+  layoutTreemap();
+  window.addEventListener('resize', layoutTreemap);
+
+  canvas.addEventListener('mousemove', function(e) {
+    var rect = canvas.getBoundingClientRect();
+    var mx = e.clientX - rect.left;
+    var my = e.clientY - rect.top;
+    var hit = null;
+    for (var i = 0; i < rects.length; i++) {
+      var r = rects[i];
+      if (mx >= r.x && mx <= r.x + r.w && my >= r.y && my <= r.y + r.h) {
+        hit = r;
+        break;
+      }
+    }
+    if (hit) {
+      tooltip.style.opacity = '1';
+      tooltip.style.left = (e.clientX + 12) + 'px';
+      tooltip.style.top = (e.clientY - 8) + 'px';
+      var title = hit.session.title;
+      if (title.length > 40) title = title.substring(0, 40) + '…';
+      tooltip.innerHTML = '<strong>' + title + '</strong><br>トピック: ' + hit.session.topic_count + ' / クエリ: ' + hit.session.query_count;
+    } else {
+      tooltip.style.opacity = '0';
+    }
+  });
+  canvas.addEventListener('mouseleave', function() { tooltip.style.opacity = '0'; });
+
+  // Legend
+  var legendData = [
+    {color: '#e5e7eb', label: '1–2 トピック (クリーン)'},
+    {color: '#fed7aa', label: '3–4'},
+    {color: '#fb923c', label: '5–7'},
+    {color: '#ea580c', label: '8–10'},
+    {color: '#dc2626', label: '11+'}
+  ];
+  document.getElementById('legend').innerHTML = legendData.map(function(d) {
+    return '<div class="legend-item"><div class="legend-swatch" style="background:' + d.color + '"></div>' + d.label + '</div>';
+  }).join('');
+
+  // 3. Pareto chart
+  var paretoCanvas = document.getElementById('pareto');
+  var paretoCtx = paretoCanvas.getContext('2d');
+  var paretoTip = document.getElementById('pareto-tooltip');
+  var paretoSorted = sessions.slice().sort(function(a, b) { return b.topic_count - a.topic_count; });
+  var paretoTotal = paretoSorted.reduce(function(sum, s) { return sum + s.topic_count; }, 0);
+  var PP = { top: 24, right: 52, bottom: 44, left: 44 };
+  var paretoBars = [];
+
+  function drawPareto() {
+    var W = paretoCanvas.parentElement.clientWidth;
+    var H = 300;
+    paretoCanvas.style.height = H + 'px';
+    paretoCanvas.width = W * dpr;
+    paretoCanvas.height = H * dpr;
+    paretoCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    paretoCtx.clearRect(0, 0, W, H);
+
+    var pW = W - PP.left - PP.right;
+    var pH = H - PP.top - PP.bottom;
+    var bw = pW / paretoSorted.length;
+
+    [25, 50, 75, 100].forEach(function(pct) {
+      var gy = PP.top + pH * (1 - pct / 100);
+      paretoCtx.strokeStyle = '#e5e7eb';
+      paretoCtx.lineWidth = 1;
+      paretoCtx.beginPath();
+      paretoCtx.moveTo(PP.left, gy);
+      paretoCtx.lineTo(W - PP.right, gy);
+      paretoCtx.stroke();
+      paretoCtx.fillStyle = '#9ca3af';
+      paretoCtx.font = '10px sans-serif';
+      paretoCtx.textAlign = 'left';
+      paretoCtx.textBaseline = 'middle';
+      paretoCtx.fillText(pct + '%', W - PP.right + 4, gy);
+    });
+
+    paretoBars = [];
+    var cumSum = 0;
+    for (var i = 0; i < paretoSorted.length; i++) {
+      var s = paretoSorted[i];
+      cumSum += s.topic_count;
+      var bx = PP.left + i * bw;
+      var bh = (Math.min(s.topic_count, 30) / 30) * pH;
+      paretoCtx.fillStyle = colorFor(s.topic_count);
+      paretoCtx.fillRect(bx + 0.5, PP.top + pH - bh, Math.max(1, bw - 0.5), bh);
+      paretoBars.push({ x: bx, w: bw, session: s, cumPct: cumSum / paretoTotal });
+    }
+
+    paretoCtx.beginPath();
+    paretoCtx.strokeStyle = '#3b82f6';
+    paretoCtx.lineWidth = 2;
+    cumSum = 0;
+    for (var j = 0; j < paretoSorted.length; j++) {
+      cumSum += paretoSorted[j].topic_count;
+      var lx = PP.left + (j + 0.5) * bw;
+      var ly = PP.top + pH * (1 - cumSum / paretoTotal);
+      if (j === 0) { paretoCtx.moveTo(lx, ly); } else { paretoCtx.lineTo(lx, ly); }
+    }
+    paretoCtx.stroke();
+
+    paretoCtx.fillStyle = '#6b7280';
+    paretoCtx.font = '10px sans-serif';
+    paretoCtx.textAlign = 'right';
+    [0, 15, 30].forEach(function(v) {
+      var ty = PP.top + pH - (v / 30) * pH;
+      paretoCtx.textBaseline = 'middle';
+      paretoCtx.fillText(v, PP.left - 4, ty);
+    });
+
+    paretoCtx.strokeStyle = '#d1d5db';
+    paretoCtx.lineWidth = 1;
+    paretoCtx.beginPath();
+    paretoCtx.moveTo(PP.left, PP.top);
+    paretoCtx.lineTo(PP.left, PP.top + pH);
+    paretoCtx.lineTo(W - PP.right, PP.top + pH);
+    paretoCtx.stroke();
+
+    var rankMarks = [1, Math.round(paretoSorted.length * 0.25), Math.round(paretoSorted.length * 0.5),
+                     Math.round(paretoSorted.length * 0.75), paretoSorted.length];
+    paretoCtx.fillStyle = '#9ca3af';
+    paretoCtx.font = '10px sans-serif';
+    paretoCtx.textAlign = 'center';
+    paretoCtx.textBaseline = 'top';
+    rankMarks.forEach(function(rank) {
+      var tx = PP.left + (rank - 0.5) * bw;
+      paretoCtx.fillText(rank + '番', tx, PP.top + pH + 4);
+    });
+
+    paretoCtx.fillStyle = '#6b7280';
+    paretoCtx.textAlign = 'center';
+    paretoCtx.textBaseline = 'top';
+    paretoCtx.fillText('セッション（トピック数降順）', PP.left + pW / 2, PP.top + pH + 28);
+  }
+
+  drawPareto();
+  window.addEventListener('resize', drawPareto);
+
+  paretoCanvas.addEventListener('mousemove', function(e) {
+    var rect = paretoCanvas.getBoundingClientRect();
+    var mx = e.clientX - rect.left;
+    var hit = null;
+    for (const bar of paretoBars) {
+      if (mx >= bar.x && mx < bar.x + bar.w) { hit = bar; break; }
+    }
+    if (hit) {
+      paretoTip.style.opacity = '1';
+      paretoTip.style.left = (e.clientX + 12) + 'px';
+      paretoTip.style.top = (e.clientY - 8) + 'px';
+      var t = hit.session.title;
+      if (t.length > 40) { t = t.substring(0, 40) + '…'; }
+      paretoTip.innerHTML = '<strong>' + t + '</strong><br>トピック: ' + hit.session.topic_count + '　累積: ' + Math.round(hit.cumPct * 100) + '%';
+    } else {
+      paretoTip.style.opacity = '0';
+    }
+  });
+  paretoCanvas.addEventListener('mouseleave', function() { paretoTip.style.opacity = '0'; });
+
+})();
+</script>
+</body>
+</html>

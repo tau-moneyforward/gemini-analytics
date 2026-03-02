@@ -1,0 +1,1 @@
+../../../commands/extract-topics.md

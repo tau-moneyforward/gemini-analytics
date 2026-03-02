@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>類型リファレンス</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .page-nav {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .page-nav a {
+      color: var(--accent);
+      text-decoration: none;
+      font-size: 0.85rem;
+      padding: 0.35rem 0.85rem;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+    }
+    .page-nav a:hover { background: var(--surface-hover); }
+    .page-nav a.current { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+    .ref-section { margin-bottom: 2rem; }
+    .ref-section h2 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid var(--border);
+    }
+    .ref-section > p {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 1rem;
+      line-height: 1.6;
+    }
+
+    .ref-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+      margin-bottom: 0.75rem;
+    }
+    .ref-table th {
+      text-align: left;
+      padding: 0.6rem 0.75rem;
+      background: var(--surface-hover);
+      border-bottom: 2px solid var(--border);
+      color: var(--text-muted);
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    .ref-table td {
+      padding: 0.6rem 0.75rem;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+      line-height: 1.5;
+    }
+    .ref-table tr:hover td { background: #f0f4ff; }
+
+    .tag-sample {
+      display: inline-block;
+      padding: 0.15rem 0.5rem;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .examples {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    .relation-note {
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      font-size: 0.82rem;
+      color: #1e40af;
+      line-height: 1.6;
+    }
+
+    .relation-note.warn {
+      background: #fef3c7;
+      border-color: #fde68a;
+      color: #92400e;
+    }
+
+    .relation-note.neutral {
+      background: #f3f4f6;
+      border-color: #e5e7eb;
+      color: #4b5563;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header-content">
+      <h1>分類類型リファレンス</h1>
+      <p class="subtitle">各次元の定義・具体例・結末パターンとの関係</p>
+    </div>
+  </header>
+
+  <main>
+    <nav class="page-nav">
+      <a href="index.html">集計ダッシュボード</a>
+      <a href="correlation.html">クロス分析</a>
+      <a href="sankey.html">サンキーダイアグラム</a>
+      <a href="reference.html" class="current">類型リファレンス</a>
+    </nav>
+
+    <!-- 目的1-1: 話題ジャンル -->
+    <section class="chart-card ref-section">
+      <h2>目的1-1：話題ジャンル（A〜I）</h2>
+      <p>295トピックそれぞれが「どんな話題だったか」を分類。1トピックが複数ジャンルに該当する場合がある（例: TypeScript 型定義は A と B の両方）。</p>
+
+      <table class="ref-table">
+        <thead>
+          <tr><th>ID</th><th>ジャンル</th><th>件数</th><th>定義</th><th>代表例</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="tag-sample" style="background:#dbeafe;color:#1e40af">A</span></td>
+            <td>プログラミング・技術支援</td>
+            <td>72件</td>
+            <td>コード生成、デバッグ、技術的な実装方法の相談。PdM がプロトタイプを自作する際に使用</td>
+            <td class="examples">HTML/CSS 生成、Chrome 拡張開発、TypeScript 型定義、正規表現、FFmpeg、シェルスクリプト、Google Sheets 関数、Mermaid/PlantUML 図作成</td>
+          </tr>
+          <tr>
+            <td><span class="tag-sample" style="background:#d1fae5;color:#065f46">B</span></td>
+            <td>ドメイン知識の獲得</td>
+            <td>63件</td>
+            <td>社会保険・人事労務に関する制度・手続き・エッジケースの理解。仕様策定のための学習用途</td>
+            <td class="examples">社会保険料計算、標準報酬月額等級、健保/厚年の違い、短時間就労者定義、マイナンバー、資格取得届、国保組合</td>
+          </tr>
+          <tr>
+            <td><span class="tag-sample" style="background:#ccfbf1;color:#115e59">C</span></td>
+            <td>ツール操作・トラブルシュート</td>
+            <td>50件</td>
+            <td>Mac 設定、各種 SaaS ツール・IDE・CLI の使い方やエラー解決</td>
+            <td class="examples">Mac 設定、Notion/Miro/Figma/Slack/Jira/GitHub 操作、Stylus CSS、Cursor IDE、Git 操作</td>
+          </tr>
+          <tr>
+            <td><span class="tag-sample" style="background:#fef3c7;color:#92400e">D</span></td>
+            <td>文章作成・リライト・翻訳</td>
+            <td>26件</td>
+            <td>ビジネス文書・UI テキスト・ブログ記事の作成や改善。英訳・和訳を含む</td>
+            <td class="examples">英文履歴書作成、PRD 英訳、目標設定文書改善、README 翻訳、UI テキスト改善、ブログ記事共同執筆</td>
+          </tr>
+          <tr>
+            <td><span class="tag-sample" style="background:#dbeafe;color:#1e3a8a;border:1px dashed #93b4f8">E</span></td>
+            <td>設計・アーキテクチャ相談</td>
+            <td>62件</td>
+            <td>DB 設計、API 設計、UI 設計方針など、実装前の設計判断に関する相談</td>
+            <td class="examples">DB 設計（bi-temporal）、OpenAPI 仕様書生成、HRIS UI 設計、OOUI/TOUI 比較、マルチテナント DB、CSV 仕様設計</td>
+          </tr>
+          <tr>
+            <td><span class="tag-sample" style="background:#d1fae5;color:#064e3b;border:1px dashed #6ee7b7">F</span></td>
+            <td>情報検索・知識確認</td>
+            <td>68件</td>
+            <td>「〜とは何か」「〜はどう読むか」など、事実の確認や用語調査</td>
+            <td class="examples">ソフト名の発音、概念の意味、プログラミング言語の利用例、3D セキュア、IaC ツール比較</td>
+          </tr>
+          <tr>
+            <td><span class="tag-sample" style="background:#fef3c7;color:#78350f;border:1px dashed #fcd34d">G</span></td>
+            <td>日本語・英語の言語相談</td>
+            <td>42件</td>
+            <td>敬語・英文法・業務用語の英訳など、言語表現に関する相談</td>
+            <td class="examples">「むしろ」の言い換え、英文法確認、業務用語の英訳、UI 用語の適切な表現</td>
+          </tr>
+          <tr>
+            <td><span class="tag-sample" style="background:#fce7f3;color:#831843">H</span></td>
+            <td>画像生成・編集</td>
+            <td>14件</td>
+            <td>写真・アイコン・イラストなどの視覚素材の生成や加工</td>
+            <td class="examples">肖像写真生成（多くが失敗）、白黒写真のカラー化、写真の色調補正、Slack 絵文字デザイン</td>
+          </tr>
+          <tr>
+            <td><span class="tag-sample" style="background:#e5e7eb;color:#4b5563">I</span></td>
+            <td>その他</td>
+            <td>4件</td>
+            <td>上記に該当しない雑談やテスト的な利用</td>
+            <td class="examples">挨拶、架空の苗字生成、ダークマター物理学</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="relation-note neutral">
+        <strong>結末パターンとの関係:</strong> ほとんどのジャンルで結末の構成比は類似。ただし H（画像生成）のみ放棄が目立つ（AI の能力限界による）。
+      </div>
+    </section>
+
+    <!-- 目的1-2: 何をしてほしかったか -->
+    <section class="chart-card ref-section">
+      <h2>目的1-2：何をしてほしかったか</h2>
+      <p>各トピックに対して「AI に何をしてほしかったか」を1つ割り当て。結末パターンとの相関が最も強い次元。</p>
+
+      <table class="ref-table">
+        <thead>
+          <tr><th>類型</th><th>件数</th><th>定義</th><th>代表例</th><th>傾向</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="tag-sample" style="background:#dbeafe;color:#1d4ed8">一緒に考える</span></td>
+            <td>85件 (28.8%)</td>
+            <td>AI と対話しながら段階的に考えを深めていく。初回回答をもとに追加質問・条件変更・深掘りを重ねる</td>
+            <td class="examples">「社保における区分とは？」→「坑内員とは？」→「英語の公式表現は？」→「取得区分コードは？」</td>
+            <td>一発承認+追加深掘りの割合が最も高い (85%)。概念理解→詳細→実装の流れで知識が深まる</td>
+          </tr>
+          <tr>
+            <td><span class="tag-sample" style="background:#e0e7ff;color:#4338ca">見てもらう</span></td>
+            <td>29件 (9.8%)</td>
+            <td>自分が作ったもの（コード・仕様書・画像）を見せて、レビュー・添削・改善を依頼</td>
+            <td class="examples">HTML コードを貼り付けて「正しい？」、TS 型定義を提示して「ER 図を作って」</td>
+            <td>一発承認+追加深掘りが 79%。素材があることで AI の回答精度が上がる</td>
+          </tr>
+          <tr>
+            <td><span class="tag-sample" style="background:#ede9fe;color:#5b21b6">作ってもらう</span></td>
+            <td>46件 (15.6%)</td>
+            <td>成果物（コード・文書・図・データ）の生成を直接依頼</td>
+            <td class="examples">「ダミー従業員 CSV を生成して」「PlantUML で ER 図を作って」「Jira Epic を書いて」</td>
+            <td>一発承認+追加深掘りが 78%。出力形式が明確なため結果が安定しやすい</td>
+          </tr>
+          <tr>
+            <td><span class="tag-sample" style="background:#f3f4f6;color:#4b5563">知識を聞く</span></td>
+            <td>74件 (25.1%)</td>
+            <td>事実・知識・やり方を1つ質問して回答を得る。「〜とは？」「〜のやり方は？」</td>
+            <td class="examples">「Statsig はどう発音する？」「JSON 配列の順序は保証される？」</td>
+            <td>一発承認が大半を占める (80%)。効率的だが深い洞察は得にくい</td>
+          </tr>
+          <tr>
+            <td><span class="tag-sample" style="background:#fef9c3;color:#854d0e">ついでに聞く</span></td>
+            <td>61件 (20.7%)</td>
+            <td>前のトピックと無関係な新しい質問を同一スレッドに投入</td>
+            <td class="examples">Mac 設定 → Chrome PiP → Homebrew → zsh → GraphQL → Mermaid（1スレッドに6トピック以上が混在）</td>
+            <td>トピック転換が 48% と突出して多い。他の4類型とは構成が大きく異なる</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="relation-note">
+        <strong>結末パターンとの関係:</strong>
+        「ついでに聞く」だけがトピック転換の割合が突出して高い (48%)。他の4つは一発承認+追加深掘りが 78-85% でほぼ横並び。クロス分析ヒートマップで詳細を確認できる。
+      </div>
+    </section>
+
+    <!-- 目的1-3: コンテキスト提供 -->
+    <section class="chart-card ref-section">
+      <h2>目的1-3：プロンプトに含めた情報</h2>
+      <p>質問時に AI にどのような情報を渡したか。1トピックが複数パターンに該当することがある（例: コード・資料を添付しつつ出力形式も指定）。</p>
+
+      <table class="ref-table">
+        <thead>
+          <tr><th>類型</th><th>件数</th><th>定義</th><th>代表例</th><th>傾向</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="tag-sample" style="background:#d1fae5;color:#065f46">コード・資料の添付</span></td>
+            <td>77件 (26.1%)</td>
+            <td>コード、HTML、CSV、仕様書、画像などの具体的な素材を添付して質問</td>
+            <td class="examples">TypeScript 型定義 → ER 図、画像(等級表) → OCR、200行の Mermaid ERD → OpenAPI YAML</td>
+            <td><strong>高品質な出力の最大の促進要因。</strong>構造化された入力が構造化された出力を生む</td>
+          </tr>
+          <tr>
+            <td><span class="tag-sample" style="background:#dbeafe;color:#1e40af">背景・目的の説明</span></td>
+            <td>89件 (30.2%)</td>
+            <td>「あるシステムは〜」「PdM として〜」など 1-2 文の前提を付与</td>
+            <td class="examples">「HR SaaS の DB を設計しているのですが…」「社保の手続きで確認したいのですが…」</td>
+            <td>一発承認+追加深掘りの割合が高い。AI が回答の焦点を絞りやすくなる</td>
+          </tr>
+          <tr>
+            <td><span class="tag-sample" style="background:#e0e7ff;color:#4338ca">出力形式の指定</span></td>
+            <td>43件 (14.6%)</td>
+            <td>文字数、形式、対象読者、出力フォーマットなどを指定</td>
+            <td class="examples">「表形式で」「3パターンで」「箇条書きで」「マークダウンで出力して」</td>
+            <td>回答の実用性が上がる。特に成果物依頼との組み合わせで効果的</td>
+          </tr>
+          <tr>
+            <td><span class="tag-sample" style="background:#ede9fe;color:#5b21b6">役割の指定</span></td>
+            <td>1件 (0.3%)</td>
+            <td>「あなたは〇〇の専門家です」型の役割指示</td>
+            <td class="examples">ほぼ未使用。大きな未開拓領域</td>
+            <td>データ不足で効果は不明。プロンプト工学では有効とされる</td>
+          </tr>
+          <tr>
+            <td><span class="tag-sample" style="background:#fef3c7;color:#92400e">質問文のみ</span></td>
+            <td>142件 (48.1%)</td>
+            <td>質問文のみで、背景情報や出力形式の指定を一切添えない</td>
+            <td class="examples">「Statsig の発音は？」「クリップボードの仕組みは？」「PulumiとOpenTofuの違いは？」</td>
+            <td>一発承認+追加深掘りは 70% 超で大半だが、コード・資料の添付時と比較するとトピック転換がやや多い</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="relation-note">
+        <strong>結末パターンとの関係:</strong>
+        コード・資料の添付時は一発承認+追加深掘りの割合が高い。質問文のみでも知識確認型では十分に機能する。因果ではなく相関の関係。
+      </div>
+    </section>
+
+    <!-- 結末の定義 -->
+    <section class="chart-card ref-section">
+      <h2>目的1-4：結末パターン</h2>
+      <p>各トピックのインタラクションがどのように終わったかを分類。他の3軸と組み合わせてクロス集計することで、どの条件下でどの結末が出やすいかを確認できる。</p>
+
+      <table class="ref-table">
+        <thead>
+          <tr><th>パターン</th><th>件数</th><th>定義</th><th>代表例</th><th>傾向</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="tag-sample" style="background:#dbeafe;color:#1e40af">一発承認</span></td>
+            <td>124件 (42.0%)</td>
+            <td>AI の最初の回答をそのまま採用。追加質問なしに終了</td>
+            <td class="examples">「Statsig の発音は？」→ 回答を得て終了、単純な知識確認や短いコード生成</td>
+            <td>最も頻出。「知識を聞く」「質問文のみ」との組み合わせで多い</td>
+          </tr>
+          <tr>
+            <td><span class="tag-sample" style="background:#d1fae5;color:#065f46">追加深掘り</span></td>
+            <td>87件 (29.5%)</td>
+            <td>最初の回答に続けて、関連する追加質問や深掘りに発展</td>
+            <td class="examples">社保の区分を聞く → 坑内員とは？ → 英語の公式表現は？ と展開</td>
+            <td>「一緒に考える」との組み合わせで顕著に多い</td>
+          </tr>
+          <tr>
+            <td><span class="tag-sample" style="background:#ede9fe;color:#5b21b6">修正リファイン</span></td>
+            <td>24件 (8.1%)</td>
+            <td>回答に不足や誤りがあり、修正を依頼して改善させた</td>
+            <td class="examples">生成されたコードにバグ → 修正依頼 → 修正版で目的達成</td>
+            <td>「作ってもらう」で比較的多い。イテレーションの一形態</td>
+          </tr>
+          <tr>
+            <td><span class="tag-sample" style="background:#fce7f3;color:#831843">エラー指摘</span></td>
+            <td>4件 (1.4%)</td>
+            <td>AI の回答に明確な事実誤認やエラーがあり、ユーザーが訂正した</td>
+            <td class="examples">計算結果の誤り → 指摘して再計算 → 正しい結果を取得</td>
+            <td>件数は少ないが、ユーザーが検証した証跡</td>
+          </tr>
+          <tr>
+            <td><span class="tag-sample" style="background:#ffedd5;color:#9a3412">反論・議論</span></td>
+            <td>2件 (0.7%)</td>
+            <td>AI の見解に対してユーザーが異なる立場から反論し、議論が発生</td>
+            <td class="examples">設計方針の是非について AI と議論を展開</td>
+            <td>極めて稀。対話的な使い方の未開拓領域</td>
+          </tr>
+          <tr>
+            <td><span class="tag-sample" style="background:#fef9c3;color:#854d0e">トピック転換</span></td>
+            <td>51件 (17.3%)</td>
+            <td>別の話題に移行。元のトピックへの回帰なし</td>
+            <td class="examples">Mac 設定の質問中 → Chrome PiP の話に → さらに Homebrew に、と話題が散逸</td>
+            <td>「ついでに聞く」と強く相関。同一スレッド内のトピック変更の結果</td>
+          </tr>
+          <tr>
+            <td><span class="tag-sample" style="background:#f1f5f9;color:#64748b">放棄</span></td>
+            <td>3件 (1.0%)</td>
+            <td>やり取りを途中で完全に打ち切り</td>
+            <td class="examples">画像生成を複数回試行 → どれも不満 → スレッドを離脱</td>
+            <td>3件全てが画像生成（H）。AI の能力限界に起因</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="relation-note">
+        <strong>読み方:</strong> 結末パターンは他の3軸（話題ジャンル・何をしてほしかったか・プロンプトに含めた情報）との組み合わせで見ることで意味が出る。クロス分析ページのヒートマップで任意の2軸の関係を確認できる。
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    <p>分析日: 2026-02-27 | 詳細データ: stats.json, stats-1-2.json, stats-1-3.json, stats-1-4.json</p>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(done)",
+      "Bash(find /Users/kobayashi.takeru/git/tau-s-playground/2026-02-27-gemini-usage -type f -size +1M -exec ls -lh {} ;)",
+      "Bash(file /Users/kobayashi.takeru/git/tau-s-playground/2026-02-27-gemini-usage/dashboard/data*.js)",
+      "Bash(chmod +x /Users/kobayashi.takeru/git/tau-s-playground/2026-03-02-gemini-analytics-tool/setup.sh)"
+    ],
+    "additionalDirectories": [
+      "/Users/kobayashi.takeru/git/tau-s-playground/2026-03-02-gemini-analytics-tool/.claude"
+    ]
+  }
+}

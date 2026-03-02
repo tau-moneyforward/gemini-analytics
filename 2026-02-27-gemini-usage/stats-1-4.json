@@ -1,0 +1,1218 @@
+{
+  "metadata": {
+    "dimension": "interaction_pattern",
+    "total_topics": 295,
+    "summary": {
+      "abandoned": {
+        "count": 3,
+        "pct": 1.0
+      },
+      "accepted": {
+        "count": 124,
+        "pct": 42.0
+      },
+      "debated": {
+        "count": 2,
+        "pct": 0.7
+      },
+      "deepened": {
+        "count": 87,
+        "pct": 29.5
+      },
+      "error_found": {
+        "count": 4,
+        "pct": 1.4
+      },
+      "refined": {
+        "count": 24,
+        "pct": 8.1
+      },
+      "switched": {
+        "count": 51,
+        "pct": 17.3
+      }
+    }
+  },
+  "topics": [
+    {
+      "id": 1,
+      "interaction_pattern": "accepted"
+    },
+    {
+      "id": 2,
+      "interaction_pattern": "accepted"
+    },
+    {
+      "id": 3,
+      "interaction_pattern": "accepted"
+    },
+    {
+      "id": 4,
+      "interaction_pattern": "error_found"
+    },
+    {
+      "id": 5,
+      "interaction_pattern": "accepted"
+    },
+    {
+      "id": 6,
+      "interaction_pattern": "deepened"
+    },
+    {
+      "id": 7,
+      "interaction_pattern": "deepened"
+    },
+    {
+      "id": 8,
+      "interaction_pattern": "deepened"
+    },
+    {
+      "id": 9,
+      "interaction_pattern": "accepted"
+    },
+    {
+      "id": 10,
+      "interaction_pattern": "accepted"
+    },
+    {
+      "id": 11,
+      "interaction_pattern": "abandoned"
+    },
+    {
+      "id": 12,
+      "interaction_pattern": "deepened"
+    },
+    {
+      "id": 13,
+      "interaction_pattern": "accepted"
+    },
+    {
+      "id": 14,
+      "interaction_pattern": "refined"
+    },
+    {
+      "id": 15,
+      "interaction_pattern": "accepted"
+    },
+    {
+      "id": 16,
+      "interaction_pattern": "deepened"
+    },
+    {
+      "id": 17,
+      "interaction_pattern": "accepted"
+    },
+    {
+      "id": 18,
+      "interaction_pattern": "deepened"
+    },
+    {
+      "id": 19,
+      "interaction_pattern": "switched"
+    },
+    {
+      "id": 20,
+      "interaction_pattern": "switched"
+    },
+    {
+      "id": 21,
+      "interaction_pattern": "switched"
+    },
+    {
+      "id": 22,
+      "interaction_pattern": "switched"
+    },
+    {
+      "id": 23,
+      "interaction_pattern": "switched"
+    },
+    {
+      "id": 24,
+      "interaction_pattern": "deepened"
+    },
+    {
+      "id": 25,
+      "interaction_pattern": "deepened"
+    },
+    {
+      "id": 26,
+      "interaction_pattern": "deepened"
+    },
+    {
+      "id": 27,
+      "interaction_pattern": "switched"
+    },
+    {
+      "id": 28,
+      "interaction_pattern": "switched"
+    },
+    {
+      "id": 29,
+      "interaction_pattern": "deepened"
+    },
+    {
+      "id": 30,
+      "interaction_pattern": "accepted"
+    },
+    {
+      "id": 31,
+      "interaction_pattern": "accepted"
+    },
+    {
+      "id": 32,
+      "interaction_pattern": "deepened"
+    },
+    {
+      "id": 33,
+      "interaction_pattern": "refined"
+    },
+    {
+      "id": 34,
+      "interaction_pattern": "accepted"
+    },
+    {
+      "id": 35,
+      "interaction_pattern": "accepted"
+    },
+    {
+      "id": 36,
+      "interaction_pattern": "accepted"
+    },
+    {
+      "id": 37,
+      "interaction_pattern": "accepted"
+    },
+    {
+      "id": 38,
+      "interaction_pattern": "accepted"
+    },
+    {
+      "id": 39,
+      "interaction_pattern": "accepted"
+    },
+    {
+      "id": 40,
+      "interaction_pattern": "refined"
+    },
+    {
+      "id": 41,
+      "interaction_pattern": "accepted"
+    },
+    {
+      "id": 42,
+      "interaction_pattern": "deepened"
+    },
+    {
+      "id": 43,
+      "interaction_pattern": "deepened"
+    },
+    {
+      "id": 44,
+      "interaction_pattern": "deepened"
+    },
+    {
+      "id": 45,
+      "interaction_pattern": "refined"
+    },
+    {
+      "id": 46,
+      "interaction_pattern": "accepted"
+    },
+    {
+      "id": 47,
+      "interaction_pattern": "accepted"
+    },
+    {
+      "id": 48,
+      "interaction_pattern": "accepted"
+    },
+    {
+      "id": 49,
+      "interaction_pattern": "refined"
+    },
+    {
+      "id": 50,
+      "interaction_pattern": "accepted"
+    },
+    {
+      "id": 51,
+      "interaction_pattern": "refined"
+    },
+    {
+      "id": 52,
+      "interaction_pattern": "deepened"
+    },
+    {
+      "id": 53,
+      "interaction_pattern": "accepted"
+    },
+    {
+      "id": 54,
+      "interaction_pattern": "deepened"
+    },
+    {
+      "id": 55,
+      "interaction_pattern": "accepted"
+    },
+    {
+      "id": 56,
+      "interaction_pattern": "accepted"
+    },
+    {
+      "id": 57,
+      "interaction_pattern": "deepened"
+    },
+    {
+      "id": 58,
+      "interaction_pattern": "deepened"
+    },
+    {
+      "id": 59,
+      "interaction_pattern": "accepted"
+    },
+    {
+      "id": 60,
+      "interaction_pattern": "refined"
+    },
+    {
+      "id": 61,
+      "interaction_pattern": "deepened"
+    },
+    {
+      "id": 62,
+      "interaction_pattern": "accepted"
+    },
+    {
+      "id": 63,
+      "interaction_pattern": "accepted"
+    },
+    {
+      "id": 64,
+      "interaction_pattern": "deepened"
+    },
+    {
+      "id": 65,
+      "interaction_pattern": "deepened"
+    },
+    {
+      "id": 66,
+      "interaction_pattern": "deepened"
+    },
+    {
+      "id": 67,
+      "interaction_pattern": "debated"
+    },
+    {
+      "id": 68,
+      "interaction_pattern": "accepted"
+    },
+    {
+      "id": 69,
+      "interaction_pattern": "accepted"
+    },
+    {
+      "id": 70,
+      "interaction_pattern": "accepted"
+    },
+    {
+      "id": 71,
+      "interaction_pattern": "deepened"
+    },
+    {
+      "id": 72,
+      "interaction_pattern": "deepened"
+    },
+    {
+      "id": 73,
+      "interaction_pattern": "deepened"
+    },
+    {
+      "id": 74,
+      "interaction_pattern": "accepted"
+    },
+    {
+      "id": 75,
+      "interaction_pattern": "deepened"
+    },
+    {
+      "id": 76,
+      "interaction_pattern": "deepened"
+    },
+    {
+      "id": 77,
+      "interaction_pattern": "deepened"
+    },
+    {
+      "id": 78,
+      "interaction_pattern": "accepted"
+    },
+    {
+      "id": 79,
+      "interaction_pattern": "deepened"
+    },
+    {
+      "id": 80,
+      "interaction_pattern": "accepted"
+    },
+    {
+      "id": 81,
+      "interaction_pattern": "deepened"
+    },
+    {
+      "id": 82,
+      "interaction_pattern": "refined"
+    },
+    {
+      "id": 83,
+      "interaction_pattern": "deepened"
+    },
+    {
+      "id": 84,
+      "interaction_pattern": "deepened"
+    },
+    {
+      "id": 85,
+      "interaction_pattern": "accepted"
+    },
+    {
+      "id": 86,
+      "interaction_pattern": "accepted"
+    },
+    {
+      "id": 87,
+      "interaction_pattern": "accepted"
+    },
+    {
+      "id": 88,
+      "interaction_pattern": "accepted"
+    },
+    {
+      "id": 89,
+      "interaction_pattern": "accepted"
+    },
+    {
+      "id": 90,
+      "interaction_pattern": "accepted"
+    },
+    {
+      "id": 91,
+      "interaction_pattern": "accepted"
+    },
+    {
+      "id": 92,
+      "interaction_pattern": "deepened"
+    },
+    {
+      "id": 93,
+      "interaction_pattern": "deepened"
+    },
+    {
+      "id": 94,
+      "interaction_pattern": "deepened"
+    },
+    {
+      "id": 95,
+      "interaction_pattern": "accepted"
+    },
+    {
+      "id": 96,
+      "interaction_pattern": "accepted"
+    },
+    {
+      "id": 97,
+      "interaction_pattern": "accepted"
+    },
+    {
+      "id": 98,
+      "interaction_pattern": "accepted"
+    },
+    {
+      "id": 99,
+      "interaction_pattern": "deepened"
+    },
+    {
+      "id": 100,
+      "interaction_pattern": "deepened"
+    },
+    {
+      "id": 101,
+      "interaction_pattern": "accepted"
+    },
+    {
+      "id": 102,
+      "interaction_pattern": "accepted"
+    },
+    {
+      "id": 103,
+      "interaction_pattern": "deepened"
+    },
+    {
+      "id": 104,
+      "interaction_pattern": "accepted"
+    },
+    {
+      "id": 105,
+      "interaction_pattern": "deepened"
+    },
+    {
+      "id": 106,
+      "interaction_pattern": "accepted"
+    },
+    {
+      "id": 107,
+      "interaction_pattern": "refined"
+    },
+    {
+      "id": 108,
+      "interaction_pattern": "accepted"
+    },
+    {
+      "id": 109,
+      "interaction_pattern": "accepted"
+    },
+    {
+      "id": 110,
+      "interaction_pattern": "accepted"
+    },
+    {
+      "id": 111,
+      "interaction_pattern": "abandoned"
+    },
+    {
+      "id": 112,
+      "interaction_pattern": "deepened"
+    },
+    {
+      "id": 113,
+      "interaction_pattern": "accepted"
+    },
+    {
+      "id": 114,
+      "interaction_pattern": "accepted"
+    },
+    {
+      "id": 115,
+      "interaction_pattern": "accepted"
+    },
+    {
+      "id": 116,
+      "interaction_pattern": "deepened"
+    },
+    {
+      "id": 117,
+      "interaction_pattern": "accepted"
+    },
+    {
+      "id": 118,
+      "interaction_pattern": "accepted"
+    },
+    {
+      "id": 119,
+      "interaction_pattern": "deepened"
+    },
+    {
+      "id": 120,
+      "interaction_pattern": "accepted"
+    },
+    {
+      "id": 121,
+      "interaction_pattern": "deepened"
+    },
+    {
+      "id": 122,
+      "interaction_pattern": "deepened"
+    },
+    {
+      "id": 123,
+      "interaction_pattern": "accepted"
+    },
+    {
+      "id": 124,
+      "interaction_pattern": "accepted"
+    },
+    {
+      "id": 125,
+      "interaction_pattern": "accepted"
+    },
+    {
+      "id": 126,
+      "interaction_pattern": "accepted"
+    },
+    {
+      "id": 127,
+      "interaction_pattern": "accepted"
+    },
+    {
+      "id": 128,
+      "interaction_pattern": "deepened"
+    },
+    {
+      "id": 129,
+      "interaction_pattern": "deepened"
+    },
+    {
+      "id": 130,
+      "interaction_pattern": "accepted"
+    },
+    {
+      "id": 131,
+      "interaction_pattern": "deepened"
+    },
+    {
+      "id": 132,
+      "interaction_pattern": "accepted"
+    },
+    {
+      "id": 133,
+      "interaction_pattern": "accepted"
+    },
+    {
+      "id": 134,
+      "interaction_pattern": "accepted"
+    },
+    {
+      "id": 135,
+      "interaction_pattern": "accepted"
+    },
+    {
+      "id": 136,
+      "interaction_pattern": "accepted"
+    },
+    {
+      "id": 137,
+      "interaction_pattern": "accepted"
+    },
+    {
+      "id": 138,
+      "interaction_pattern": "accepted"
+    },
+    {
+      "id": 139,
+      "interaction_pattern": "refined"
+    },
+    {
+      "id": 140,
+      "interaction_pattern": "deepened"
+    },
+    {
+      "id": 141,
+      "interaction_pattern": "accepted"
+    },
+    {
+      "id": 142,
+      "interaction_pattern": "accepted"
+    },
+    {
+      "id": 143,
+      "interaction_pattern": "accepted"
+    },
+    {
+      "id": 144,
+      "interaction_pattern": "accepted"
+    },
+    {
+      "id": 145,
+      "interaction_pattern": "deepened"
+    },
+    {
+      "id": 146,
+      "interaction_pattern": "deepened"
+    },
+    {
+      "id": 147,
+      "interaction_pattern": "accepted"
+    },
+    {
+      "id": 148,
+      "interaction_pattern": "switched"
+    },
+    {
+      "id": 149,
+      "interaction_pattern": "switched"
+    },
+    {
+      "id": 150,
+      "interaction_pattern": "error_found"
+    },
+    {
+      "id": 151,
+      "interaction_pattern": "switched"
+    },
+    {
+      "id": 152,
+      "interaction_pattern": "deepened"
+    },
+    {
+      "id": 153,
+      "interaction_pattern": "switched"
+    },
+    {
+      "id": 154,
+      "interaction_pattern": "accepted"
+    },
+    {
+      "id": 155,
+      "interaction_pattern": "switched"
+    },
+    {
+      "id": 156,
+      "interaction_pattern": "accepted"
+    },
+    {
+      "id": 157,
+      "interaction_pattern": "switched"
+    },
+    {
+      "id": 158,
+      "interaction_pattern": "switched"
+    },
+    {
+      "id": 159,
+      "interaction_pattern": "deepened"
+    },
+    {
+      "id": 160,
+      "interaction_pattern": "deepened"
+    },
+    {
+      "id": 161,
+      "interaction_pattern": "switched"
+    },
+    {
+      "id": 162,
+      "interaction_pattern": "switched"
+    },
+    {
+      "id": 163,
+      "interaction_pattern": "switched"
+    },
+    {
+      "id": 164,
+      "interaction_pattern": "deepened"
+    },
+    {
+      "id": 165,
+      "interaction_pattern": "deepened"
+    },
+    {
+      "id": 166,
+      "interaction_pattern": "deepened"
+    },
+    {
+      "id": 167,
+      "interaction_pattern": "accepted"
+    },
+    {
+      "id": 168,
+      "interaction_pattern": "switched"
+    },
+    {
+      "id": 169,
+      "interaction_pattern": "switched"
+    },
+    {
+      "id": 170,
+      "interaction_pattern": "deepened"
+    },
+    {
+      "id": 171,
+      "interaction_pattern": "switched"
+    },
+    {
+      "id": 172,
+      "interaction_pattern": "accepted"
+    },
+    {
+      "id": 173,
+      "interaction_pattern": "deepened"
+    },
+    {
+      "id": 174,
+      "interaction_pattern": "accepted"
+    },
+    {
+      "id": 175,
+      "interaction_pattern": "switched"
+    },
+    {
+      "id": 176,
+      "interaction_pattern": "switched"
+    },
+    {
+      "id": 177,
+      "interaction_pattern": "accepted"
+    },
+    {
+      "id": 178,
+      "interaction_pattern": "accepted"
+    },
+    {
+      "id": 179,
+      "interaction_pattern": "deepened"
+    },
+    {
+      "id": 180,
+      "interaction_pattern": "switched"
+    },
+    {
+      "id": 181,
+      "interaction_pattern": "deepened"
+    },
+    {
+      "id": 182,
+      "interaction_pattern": "deepened"
+    },
+    {
+      "id": 183,
+      "interaction_pattern": "switched"
+    },
+    {
+      "id": 184,
+      "interaction_pattern": "switched"
+    },
+    {
+      "id": 185,
+      "interaction_pattern": "deepened"
+    },
+    {
+      "id": 186,
+      "interaction_pattern": "switched"
+    },
+    {
+      "id": 187,
+      "interaction_pattern": "switched"
+    },
+    {
+      "id": 188,
+      "interaction_pattern": "switched"
+    },
+    {
+      "id": 189,
+      "interaction_pattern": "accepted"
+    },
+    {
+      "id": 190,
+      "interaction_pattern": "deepened"
+    },
+    {
+      "id": 191,
+      "interaction_pattern": "refined"
+    },
+    {
+      "id": 192,
+      "interaction_pattern": "refined"
+    },
+    {
+      "id": 193,
+      "interaction_pattern": "accepted"
+    },
+    {
+      "id": 194,
+      "interaction_pattern": "refined"
+    },
+    {
+      "id": 195,
+      "interaction_pattern": "switched"
+    },
+    {
+      "id": 196,
+      "interaction_pattern": "accepted"
+    },
+    {
+      "id": 197,
+      "interaction_pattern": "switched"
+    },
+    {
+      "id": 198,
+      "interaction_pattern": "accepted"
+    },
+    {
+      "id": 199,
+      "interaction_pattern": "deepened"
+    },
+    {
+      "id": 200,
+      "interaction_pattern": "deepened"
+    },
+    {
+      "id": 201,
+      "interaction_pattern": "refined"
+    },
+    {
+      "id": 202,
+      "interaction_pattern": "deepened"
+    },
+    {
+      "id": 203,
+      "interaction_pattern": "abandoned"
+    },
+    {
+      "id": 204,
+      "interaction_pattern": "deepened"
+    },
+    {
+      "id": 205,
+      "interaction_pattern": "deepened"
+    },
+    {
+      "id": 206,
+      "interaction_pattern": "accepted"
+    },
+    {
+      "id": 207,
+      "interaction_pattern": "deepened"
+    },
+    {
+      "id": 208,
+      "interaction_pattern": "accepted"
+    },
+    {
+      "id": 209,
+      "interaction_pattern": "accepted"
+    },
+    {
+      "id": 210,
+      "interaction_pattern": "accepted"
+    },
+    {
+      "id": 211,
+      "interaction_pattern": "accepted"
+    },
+    {
+      "id": 212,
+      "interaction_pattern": "deepened"
+    },
+    {
+      "id": 213,
+      "interaction_pattern": "accepted"
+    },
+    {
+      "id": 214,
+      "interaction_pattern": "accepted"
+    },
+    {
+      "id": 215,
+      "interaction_pattern": "deepened"
+    },
+    {
+      "id": 216,
+      "interaction_pattern": "accepted"
+    },
+    {
+      "id": 217,
+      "interaction_pattern": "accepted"
+    },
+    {
+      "id": 218,
+      "interaction_pattern": "deepened"
+    },
+    {
+      "id": 219,
+      "interaction_pattern": "accepted"
+    },
+    {
+      "id": 220,
+      "interaction_pattern": "refined"
+    },
+    {
+      "id": 221,
+      "interaction_pattern": "deepened"
+    },
+    {
+      "id": 222,
+      "interaction_pattern": "accepted"
+    },
+    {
+      "id": 223,
+      "interaction_pattern": "deepened"
+    },
+    {
+      "id": 224,
+      "interaction_pattern": "accepted"
+    },
+    {
+      "id": 225,
+      "interaction_pattern": "accepted"
+    },
+    {
+      "id": 226,
+      "interaction_pattern": "accepted"
+    },
+    {
+      "id": 227,
+      "interaction_pattern": "accepted"
+    },
+    {
+      "id": 228,
+      "interaction_pattern": "deepened"
+    },
+    {
+      "id": 229,
+      "interaction_pattern": "accepted"
+    },
+    {
+      "id": 230,
+      "interaction_pattern": "accepted"
+    },
+    {
+      "id": 231,
+      "interaction_pattern": "accepted"
+    },
+    {
+      "id": 232,
+      "interaction_pattern": "accepted"
+    },
+    {
+      "id": 233,
+      "interaction_pattern": "accepted"
+    },
+    {
+      "id": 234,
+      "interaction_pattern": "accepted"
+    },
+    {
+      "id": 235,
+      "interaction_pattern": "deepened"
+    },
+    {
+      "id": 236,
+      "interaction_pattern": "deepened"
+    },
+    {
+      "id": 237,
+      "interaction_pattern": "refined"
+    },
+    {
+      "id": 238,
+      "interaction_pattern": "accepted"
+    },
+    {
+      "id": 239,
+      "interaction_pattern": "error_found"
+    },
+    {
+      "id": 240,
+      "interaction_pattern": "error_found"
+    },
+    {
+      "id": 241,
+      "interaction_pattern": "deepened"
+    },
+    {
+      "id": 242,
+      "interaction_pattern": "accepted"
+    },
+    {
+      "id": 243,
+      "interaction_pattern": "deepened"
+    },
+    {
+      "id": 244,
+      "interaction_pattern": "accepted"
+    },
+    {
+      "id": 245,
+      "interaction_pattern": "deepened"
+    },
+    {
+      "id": 246,
+      "interaction_pattern": "accepted"
+    },
+    {
+      "id": 247,
+      "interaction_pattern": "refined"
+    },
+    {
+      "id": 248,
+      "interaction_pattern": "accepted"
+    },
+    {
+      "id": 249,
+      "interaction_pattern": "accepted"
+    },
+    {
+      "id": 250,
+      "interaction_pattern": "accepted"
+    },
+    {
+      "id": 251,
+      "interaction_pattern": "accepted"
+    },
+    {
+      "id": 252,
+      "interaction_pattern": "deepened"
+    },
+    {
+      "id": 253,
+      "interaction_pattern": "accepted"
+    },
+    {
+      "id": 254,
+      "interaction_pattern": "deepened"
+    },
+    {
+      "id": 255,
+      "interaction_pattern": "accepted"
+    },
+    {
+      "id": 256,
+      "interaction_pattern": "refined"
+    },
+    {
+      "id": 257,
+      "interaction_pattern": "accepted"
+    },
+    {
+      "id": 258,
+      "interaction_pattern": "deepened"
+    },
+    {
+      "id": 259,
+      "interaction_pattern": "refined"
+    },
+    {
+      "id": 260,
+      "interaction_pattern": "accepted"
+    },
+    {
+      "id": 261,
+      "interaction_pattern": "refined"
+    },
+    {
+      "id": 262,
+      "interaction_pattern": "accepted"
+    },
+    {
+      "id": 263,
+      "interaction_pattern": "refined"
+    },
+    {
+      "id": 264,
+      "interaction_pattern": "switched"
+    },
+    {
+      "id": 265,
+      "interaction_pattern": "switched"
+    },
+    {
+      "id": 266,
+      "interaction_pattern": "switched"
+    },
+    {
+      "id": 267,
+      "interaction_pattern": "debated"
+    },
+    {
+      "id": 268,
+      "interaction_pattern": "switched"
+    },
+    {
+      "id": 269,
+      "interaction_pattern": "deepened"
+    },
+    {
+      "id": 270,
+      "interaction_pattern": "refined"
+    },
+    {
+      "id": 271,
+      "interaction_pattern": "refined"
+    },
+    {
+      "id": 272,
+      "interaction_pattern": "accepted"
+    },
+    {
+      "id": 273,
+      "interaction_pattern": "deepened"
+    },
+    {
+      "id": 274,
+      "interaction_pattern": "refined"
+    },
+    {
+      "id": 275,
+      "interaction_pattern": "accepted"
+    },
+    {
+      "id": 276,
+      "interaction_pattern": "deepened"
+    },
+    {
+      "id": 277,
+      "interaction_pattern": "accepted"
+    },
+    {
+      "id": 278,
+      "interaction_pattern": "deepened"
+    },
+    {
+      "id": 279,
+      "interaction_pattern": "switched"
+    },
+    {
+      "id": 280,
+      "interaction_pattern": "switched"
+    },
+    {
+      "id": 281,
+      "interaction_pattern": "switched"
+    },
+    {
+      "id": 282,
+      "interaction_pattern": "switched"
+    },
+    {
+      "id": 283,
+      "interaction_pattern": "switched"
+    },
+    {
+      "id": 284,
+      "interaction_pattern": "switched"
+    },
+    {
+      "id": 285,
+      "interaction_pattern": "switched"
+    },
+    {
+      "id": 286,
+      "interaction_pattern": "switched"
+    },
+    {
+      "id": 287,
+      "interaction_pattern": "switched"
+    },
+    {
+      "id": 288,
+      "interaction_pattern": "switched"
+    },
+    {
+      "id": 289,
+      "interaction_pattern": "switched"
+    },
+    {
+      "id": 290,
+      "interaction_pattern": "switched"
+    },
+    {
+      "id": 291,
+      "interaction_pattern": "switched"
+    },
+    {
+      "id": 292,
+      "interaction_pattern": "switched"
+    },
+    {
+      "id": 293,
+      "interaction_pattern": "switched"
+    },
+    {
+      "id": 294,
+      "interaction_pattern": "switched"
+    },
+    {
+      "id": 295,
+      "interaction_pattern": "switched"
+    }
+  ]
+}

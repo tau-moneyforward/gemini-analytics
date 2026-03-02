@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>定義リファレンス — AI チャット利用分析</title>
+<link rel="stylesheet" href="common.css">
+<style>
+.axis-section { margin-bottom: 2.5rem; }
+.axis-section > h2 {
+  font-size: 1.2rem; font-weight: 700; margin-bottom: 1.25rem;
+  padding-bottom: .6rem; border-bottom: 2px solid var(--border);
+  display: flex; align-items: baseline; gap: .75rem;
+}
+.axis-eng { font-size: .8rem; font-weight: 500; color: var(--text-secondary); }
+
+.value-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 1.5rem; margin-bottom: 1rem;
+  box-shadow: var(--shadow);
+}
+.value-card-header { display: flex; align-items: center; gap: .75rem; margin-bottom: 1rem; flex-wrap: wrap; }
+.value-label { font-size: 1.05rem; font-weight: 700; }
+.value-eng { font-size: .8rem; color: var(--text-secondary); font-weight: 500; }
+.value-count {
+  display: inline-block; padding: .2rem .6rem; border-radius: 99px;
+  font-size: .78rem; font-weight: 600;
+  background: var(--bg); color: var(--text-secondary); border: 1px solid var(--border);
+}
+
+.def-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
+.def-box { padding: .85rem 1rem; border-radius: 8px; font-size: .85rem; line-height: 1.65; }
+.def-box.is { background: #eff6ff; border: 1px solid #bfdbfe; color: #1e40af; }
+.def-box.is-not { background: #fef3c7; border: 1px solid #fde68a; color: #92400e; }
+.def-box-label { font-weight: 700; font-size: .78rem; text-transform: uppercase; letter-spacing: .04em; margin-bottom: .35rem; display: block; }
+
+.examples-area { margin-top: .25rem; }
+.examples-area h4 { font-size: .8rem; font-weight: 600; color: var(--text-secondary); margin-bottom: .6rem; }
+.examples-placeholder { font-size: .78rem; color: var(--text-secondary); font-style: italic; }
+.example-item {
+  border-left: 3px solid var(--border); padding: .5rem .75rem;
+  margin-bottom: .5rem; background: var(--bg); border-radius: 0 6px 6px 0;
+}
+.example-topic {
+  font-size: .78rem; font-weight: 600; color: var(--text);
+  display: flex; align-items: center; gap: .4rem;
+  cursor: pointer; user-select: none;
+}
+.example-topic:hover { color: var(--accent); }
+.example-arrow {
+  font-size: .6rem; color: var(--text-secondary);
+  display: inline-block; transition: transform .15s ease; flex-shrink: 0;
+}
+.example-item.open .example-arrow { transform: rotate(90deg); }
+.example-id { font-size: .7rem; color: var(--text-secondary); font-weight: 400; }
+.example-prompt-wrap {
+  display: grid; grid-template-rows: 0fr;
+  transition: grid-template-rows .2s ease;
+}
+.example-item.open .example-prompt-wrap { grid-template-rows: 1fr; }
+.example-prompt {
+  font-size: .78rem; color: var(--text-secondary); line-height: 1.5;
+  overflow: hidden; padding-top: 0; transition: padding-top .2s ease;
+}
+.example-item.open .example-prompt { padding-top: .4rem; }
+
+.matrix-section { margin-bottom: 2.5rem; }
+.matrix-section > h2 {
+  font-size: 1.2rem; font-weight: 700; margin-bottom: .5rem;
+  padding-bottom: .6rem; border-bottom: 2px solid var(--border);
+}
+.matrix-desc { font-size: .85rem; color: var(--text-secondary); margin-bottom: 1.25rem; line-height: 1.6; }
+
+.matrix-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 1.5rem; margin-bottom: 1.5rem;
+  box-shadow: var(--shadow);
+}
+.matrix-table-wrapper { overflow-x: auto; margin-bottom: 1.25rem; }
+.impact-matrix { width: 100%; border-collapse: collapse; font-size: .85rem; min-width: 400px; }
+.impact-matrix th {
+  padding: .65rem 1rem; font-weight: 600; text-align: center;
+  border-bottom: 2px solid var(--border); color: var(--text-secondary); background: #f8fafc;
+}
+.impact-matrix th:first-child { text-align: left; width: 130px; }
+.impact-matrix td { padding: .65rem 1rem; text-align: center; border-bottom: 1px solid var(--border); }
+.impact-matrix td:first-child { text-align: left; font-weight: 600; color: var(--text-secondary); }
+.impact-cell {
+  display: inline-block; padding: .35rem .9rem; border-radius: 6px;
+  font-weight: 600; font-size: .82rem; color: #fff; min-width: 56px;
+}
+.impact-co_creation { background: #3b82f6; }
+.impact-exploration { background: #14b8a6; }
+.impact-lookup { background: #6b7280; }
+.impact-trial { background: #f59e0b; }
+
+.impact-levels { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; }
+.level-card { border-radius: 8px; padding: 1rem 1.15rem; color: #fff; }
+.level-card-header { display: flex; align-items: baseline; gap: .5rem; margin-bottom: .5rem; }
+.level-name { font-size: 1.1rem; font-weight: 700; }
+.level-stats { font-size: .78rem; opacity: .85; }
+.level-meta { display: flex; gap: 1rem; font-size: .78rem; opacity: .9; margin-bottom: .5rem; flex-wrap: wrap; }
+.level-desc { font-size: .82rem; line-height: 1.55; opacity: .95; }
+
+@media (max-width: 700px) {
+  .def-grid { grid-template-columns: 1fr; }
+  .impact-levels { grid-template-columns: 1fr; }
+  .value-card { padding: 1rem; }
+}
+</style>
+</head>
+<body>
+
+<nav class="top-nav">
+  <div class="nav-inner">
+    <a href="definitions.html" class="active">定義</a>
+    <a href="crosstab.html">クロス集計</a>
+    <a href="hygiene.html">スレッド衛生</a>
+    <a href="rawdata.html">生データ</a>
+  </div>
+</nav>
+
+<div class="page-scroll">
+<div class="container">
+  <h1>定義リファレンス</h1>
+  <p class="page-subtitle">2軸分類とインパクトレベルの定義・判断基準・具体例</p>
+
+  <!-- ── 軸1: 与えた入力 ── -->
+  <section class="axis-section">
+    <h2>軸1 — 与えた入力 <span class="axis-eng">input_richness</span></h2>
+
+    <div class="value-card">
+      <div class="value-card-header">
+        <span class="value-label">素材あり</span>
+        <span class="value-eng">material</span>
+        <span class="value-count" data-key="input_richness.material"></span>
+      </div>
+      <div class="def-grid">
+        <div class="def-box is"><span class="def-box-label">該当するもの</span>ユーザーがAIに直接処理・変換・分析できる構造化された情報を渡した。ソースコード、設計図（ER図、PlantUML）、仕様書、データ（CSV、JSON）、画像（ワイヤーフレーム、等級表）、テキスト成果物（英文履歴書、UIテキスト）、エラーログが該当する。</div>
+        <div class="def-box is-not"><span class="def-box-label">該当しないもの</span>口頭で「ER図を作った」と言及するだけでは該当しない。URLの提示だけでは素材とみなさず「文脈あり」に分類。</div>
+      </div>
+      <div class="examples-area"><h4>具体例</h4><div class="examples-slot" data-key="input_richness.material"><span class="examples-placeholder">データ読込後に表示されます</span></div></div>
+    </div>
+
+    <div class="value-card">
+      <div class="value-card-header">
+        <span class="value-label">文脈あり</span>
+        <span class="value-eng">contextualized</span>
+        <span class="value-count" data-key="input_richness.contextualized"></span>
+      </div>
+      <div class="def-grid">
+        <div class="def-box is"><span class="def-box-label">該当するもの</span>素材は渡していないが、質問の背景や出力の制約を言葉で伝えた。背景説明（「人事労務SaaSのDBを設計しているのだが…」）、出力形式の指定（「表形式で」「マークダウンで」）、対象の限定、URLの提示が該当する。</div>
+        <div class="def-box is-not"><span class="def-box-label">該当しないもの</span>単に質問を投げただけでは該当しない。質問文に「なぜそれを聞いているのか」の手がかりがあるかどうかが判断基準。</div>
+      </div>
+      <div class="examples-area"><h4>具体例</h4><div class="examples-slot" data-key="input_richness.contextualized"><span class="examples-placeholder">データ読込後に表示されます</span></div></div>
+    </div>
+
+    <div class="value-card">
+      <div class="value-card-header">
+        <span class="value-label">質問だけ</span>
+        <span class="value-eng">bare</span>
+        <span class="value-count" data-key="input_richness.bare"></span>
+      </div>
+      <div class="def-grid">
+        <div class="def-box is"><span class="def-box-label">該当するもの</span>質問文のみ。背景も素材も形式指定もない。</div>
+        <div class="def-box is-not"><span class="def-box-label">該当しないもの</span>価値がないわけではない。辞書的な用途では十分に機能する。</div>
+      </div>
+      <div class="examples-area"><h4>具体例</h4><div class="examples-slot" data-key="input_richness.bare"><span class="examples-placeholder">データ読込後に表示されます</span></div></div>
+    </div>
+  </section>
+
+  <!-- ── 軸2: 期待する出力 ── -->
+  <section class="axis-section">
+    <h2>軸2 — 期待する出力 <span class="axis-eng">expected_output</span></h2>
+
+    <div class="value-card">
+      <div class="value-card-header">
+        <span class="value-label">成果物</span>
+        <span class="value-eng">artifact</span>
+        <span class="value-count" data-key="expected_output.artifact"></span>
+      </div>
+      <div class="def-grid">
+        <div class="def-box is"><span class="def-box-label">該当するもの</span>そのまま使える具体的な成果物を期待した。コード、仕様書、文書、データ、画像、変換結果が該当。</div>
+        <div class="def-box is-not"><span class="def-box-label">該当しないもの</span>AIの応答を参考にして自分で作るのは「理解」。AIの出力をコピーしてそのまま使えるかが判断基準。</div>
+      </div>
+      <div class="examples-area"><h4>具体例</h4><div class="examples-slot" data-key="expected_output.artifact"><span class="examples-placeholder">データ読込後に表示されます</span></div></div>
+    </div>
+
+    <div class="value-card">
+      <div class="value-card-header">
+        <span class="value-label">理解</span>
+        <span class="value-eng">understanding</span>
+        <span class="value-count" data-key="expected_output.understanding"></span>
+      </div>
+      <div class="def-grid">
+        <div class="def-box is"><span class="def-box-label">該当するもの</span>対話を通じて知識を深める、設計を検討する、レビューを受けることを期待した。制度の深掘り、設計の壁打ち、トラブルシュート、添削が該当。</div>
+        <div class="def-box is-not"><span class="def-box-label">該当しないもの</span>1回の応答で完結する単純な確認は「事実」。やりとりを重ねることで理解が深まったかが判断基準。</div>
+      </div>
+      <div class="examples-area"><h4>具体例</h4><div class="examples-slot" data-key="expected_output.understanding"><span class="examples-placeholder">データ読込後に表示されます</span></div></div>
+    </div>
+
+    <div class="value-card">
+      <div class="value-card-header">
+        <span class="value-label">事実</span>
+        <span class="value-eng">fact</span>
+        <span class="value-count" data-key="expected_output.fact"></span>
+      </div>
+      <div class="def-grid">
+        <div class="def-box is"><span class="def-box-label">該当するもの</span>単発の事実・用語・手順を期待した。用語確認、手順確認、仕様確認が該当。</div>
+        <div class="def-box is-not"><span class="def-box-label">該当しないもの</span>追加質問で深掘りが始まった場合は「理解」に分類。</div>
+      </div>
+      <div class="examples-area"><h4>具体例</h4><div class="examples-slot" data-key="expected_output.fact"><span class="examples-placeholder">データ読込後に表示されます</span></div></div>
+    </div>
+  </section>
+
+  <!-- ── インパクトレベル ── -->
+  <section class="matrix-section">
+    <h2>インパクトレベル <span class="axis-eng">impact</span></h2>
+    <p class="matrix-desc">入力 × 出力の3×3マトリクスから導出される4段階の分類。</p>
+
+    <div class="matrix-card">
+      <div class="matrix-table-wrapper">
+        <table class="impact-matrix">
+          <thead><tr><th></th><th>成果物</th><th>理解</th><th>事実</th></tr></thead>
+          <tbody>
+            <tr>
+              <td>素材あり</td>
+              <td><span class="impact-cell impact-co_creation">共創</span></td>
+              <td><span class="impact-cell impact-co_creation">共創</span></td>
+              <td><span class="impact-cell impact-lookup">検索</span></td>
+            </tr>
+            <tr>
+              <td>文脈あり</td>
+              <td><span class="impact-cell impact-co_creation">共創</span></td>
+              <td><span class="impact-cell impact-exploration">探索</span></td>
+              <td><span class="impact-cell impact-lookup">検索</span></td>
+            </tr>
+            <tr>
+              <td>質問だけ</td>
+              <td><span class="impact-cell impact-trial">試行</span></td>
+              <td><span class="impact-cell impact-exploration">探索</span></td>
+              <td><span class="impact-cell impact-lookup">検索</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="impact-levels">
+        <div class="level-card" style="background:#3b82f6">
+          <div class="level-card-header"><span class="level-name">共創</span><span class="level-stats">co_creation</span></div>
+          <div class="level-meta" data-impact="co_creation"></div>
+          <div class="level-desc">素材×成果物、素材×理解、文脈×成果物。自分の素材や文脈を起点にAIと一緒に作るか設計を深める。</div>
+        </div>
+        <div class="level-card" style="background:#14b8a6">
+          <div class="level-card-header"><span class="level-name">探索</span><span class="level-stats">exploration</span></div>
+          <div class="level-meta" data-impact="exploration"></div>
+          <div class="level-desc">文脈×理解、質問×理解。対話で知識を掘り下げる。</div>
+        </div>
+        <div class="level-card" style="background:#6b7280">
+          <div class="level-card-header"><span class="level-name">検索</span><span class="level-stats">lookup</span></div>
+          <div class="level-meta" data-impact="lookup"></div>
+          <div class="level-desc">いずれか×事実。事実を確認する。1〜2回で完結。</div>
+        </div>
+        <div class="level-card" style="background:#f59e0b">
+          <div class="level-card-header"><span class="level-name">試行</span><span class="level-stats">trial</span></div>
+          <div class="level-meta" data-impact="trial"></div>
+          <div class="level-desc">質問×成果物。指示だけで作らせる。成功率にばらつき。</div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+</div>
+
+<!-- データが存在すれば件数・具体例を動的に注入 -->
+<script src="data-v3.js"></script>
+<script src="topic-filenames.js"></script>
+<script>
+(function() {
+  var S = globalThis.__STATS_16__;
+  if (!S) return; // データ未読込なら定義のみ表示
+
+  var E = globalThis.__EXAMPLES__ || {};
+  var meta = S.metadata;
+  var summary = meta.summary;
+  var total = meta.total_topics;
+
+  function pct(n) { return (n / total * 100).toFixed(1) + '%'; }
+  function esc(s) { var el = document.createElement('span'); el.textContent = s; return el.innerHTML; }
+
+  // 件数バッジを注入
+  document.querySelectorAll('.value-count[data-key]').forEach(function(el) {
+    var parts = el.dataset.key.split('.');
+    var count = summary[parts[0]] && summary[parts[0]][parts[1]];
+    if (count != null) el.textContent = count + '件 (' + pct(count) + ')';
+  });
+
+  // インパクトレベルの件数を注入
+  var irOrder = ['material', 'contextualized', 'bare'];
+  var eoOrder = ['artifact', 'understanding', 'fact'];
+  var matrixMap = meta.axes.impact.matrix;
+  var avgQ = meta.avg_query_count;
+
+  document.querySelectorAll('.level-meta[data-impact]').forEach(function(el) {
+    var key = el.dataset.impact;
+    var count = summary.impact[key];
+    if (count == null) return;
+    var vals = [];
+    irOrder.forEach(function(ir) {
+      eoOrder.forEach(function(eo) {
+        if (matrixMap[ir + '|' + eo] === key && avgQ[ir]) vals.push(avgQ[ir][eo]);
+      });
+    });
+    var avg = vals.length ? (vals.reduce(function(a, b) { return a + b; }, 0) / vals.length).toFixed(1) : '—';
+    el.innerHTML = '<span>' + count + '件 (' + pct(count) + ')</span><span>平均 ' + avg + ' クエリ</span>';
+  });
+
+  // 具体例を注入
+  function loadPromptFromFile(id) {
+    var fileMap = globalThis.__TOPIC_FILES__;
+    var filename = fileMap && fileMap[String(id)];
+    if (!filename) return Promise.resolve('（ファイルが見つかりません）');
+    return fetch('../topics/' + encodeURIComponent(filename))
+      .then(function(r) { return r.text(); })
+      .then(function(md) {
+        var m = md.match(/# you asked\n\n([\s\S]*?)\n---\n/);
+        return m ? m[1].trim() : '（プロンプトを取得できませんでした）';
+      })
+      .catch(function() { return '（読み込みエラー）'; });
+  }
+
+  document.querySelectorAll('.examples-slot[data-key]').forEach(function(slot) {
+    var parts = slot.dataset.key.split('.');
+    var examples = (E[parts[0]] && E[parts[0]][parts[1]]) || [];
+    examples = examples.slice(0, 4);
+    if (examples.length === 0) return;
+
+    slot.innerHTML = examples.map(function(ex) {
+      return '<div class="example-item" data-id="' + ex.id + '">'
+        + '<div class="example-topic"><span class="example-arrow">▶</span>'
+        + esc(ex.topic) + ' <span class="example-id">#' + ex.id + '</span></div>'
+        + '<div class="example-prompt-wrap"><div class="example-prompt"></div></div>'
+        + '</div>';
+    }).join('');
+
+    slot.querySelectorAll('.example-topic').forEach(function(toggle) {
+      toggle.addEventListener('click', function() {
+        var item = toggle.closest('.example-item');
+        if (item.classList.contains('open')) { item.classList.remove('open'); return; }
+        var promptEl = item.querySelector('.example-prompt');
+        if (promptEl.dataset.loaded) { item.classList.add('open'); return; }
+        item.classList.add('open');
+        promptEl.textContent = '読み込み中…';
+        loadPromptFromFile(Number(item.dataset.id)).then(function(text) {
+          promptEl.textContent = text;
+          promptEl.dataset.loaded = '1';
+        });
+      });
+    });
+  });
+})();
+</script>
+</body>
+</html>

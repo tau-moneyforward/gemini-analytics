@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>生データ一覧 — Gemini AI 活用分析</title>
+<link rel="stylesheet" href="common.css">
+<style>
+.container { padding-bottom: 1rem; }
+
+.toolbar { display: flex; align-items: center; gap: .75rem; margin-bottom: 1rem; flex-wrap: wrap; }
+.toolbar input[type=search] {
+  flex: 1; min-width: 180px; max-width: 320px;
+  padding: .45rem .75rem; border: 1px solid var(--border); border-radius: 8px;
+  font-size: .875rem; outline: none; background: var(--surface);
+}
+.toolbar input[type=search]:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(59,130,246,.15); }
+.toolbar select {
+  padding: .45rem .65rem; border: 1px solid var(--border); border-radius: 8px;
+  font-size: .875rem; background: var(--surface); cursor: pointer; outline: none;
+}
+.toolbar select:focus { border-color: var(--accent); }
+.count-label { margin-left: auto; font-size: .8rem; color: var(--text-secondary); white-space: nowrap; }
+
+/* Table: split header / scrollable body (like the modal pattern) */
+.table-outer {
+  border-radius: var(--radius); box-shadow: var(--shadow);
+  background: var(--surface); overflow: hidden;
+  display: flex; flex-direction: column;
+}
+.table-head { flex-shrink: 0; overflow-y: auto; scrollbar-gutter: stable; }
+.table-body-wrap { overflow-y: auto; scrollbar-gutter: stable; }
+.table-head table, .table-body-wrap table {
+  width: 100%; table-layout: fixed;
+  border-collapse: separate; border-spacing: 0;
+  background: var(--surface); font-size: .85rem;
+}
+.cw-id { width: 50px; } .cw-session { width: 180px; }
+.cw-input { width: 90px; } .cw-output { width: 90px; }
+.cw-qcount { width: 72px; } .cw-tcount { width: 82px; }
+th {
+  background: #f1f5f9; font-weight: 600; text-align: left;
+  padding: .65rem .85rem; box-shadow: inset 0 -2px 0 var(--border);
+  white-space: nowrap; cursor: pointer; user-select: none; color: #374151;
+  overflow: hidden; text-overflow: ellipsis;
+}
+th:hover { background: #e8edf5; }
+th .sort-icon { display: inline-block; margin-left: .3rem; opacity: .4; font-size: .75rem; }
+th.sorted-asc .sort-icon::after  { content: "▲"; opacity: 1; }
+th.sorted-desc .sort-icon::after { content: "▼"; opacity: 1; }
+th:not(.sorted-asc):not(.sorted-desc) .sort-icon::after { content: "⇅"; }
+td { padding: .55rem .85rem; border-bottom: 1px solid #f3f4f6; vertical-align: top; overflow: hidden; text-overflow: ellipsis; }
+tr:last-child td { border-bottom: none; }
+tbody tr { cursor: pointer; }
+tbody tr:hover td { background: #f0f4ff; }
+.col-id  { text-align: right; color: #9ca3af; font-size: .8rem; }
+.col-num { text-align: right; }
+.session-text { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block; }
+
+.badge { display: inline-block; padding: .15rem .5rem; border-radius: 4px; font-size: .75rem; font-weight: 600; white-space: nowrap; }
+.badge-material      { background: #dbeafe; color: #1d4ed8; }
+.badge-contextualized { background: #ede9fe; color: #5b21b6; }
+.badge-bare          { background: #f3f4f6; color: #374151; }
+.badge-artifact      { background: #dcfce7; color: #166534; }
+.badge-understanding { background: #fef9c3; color: #854d0e; }
+.badge-fact          { background: #fee2e2; color: #991b1b; }
+
+.empty-state { text-align: center; padding: 3rem; color: #9ca3af; font-size: .9rem; }
+
+/* ── Modal ── */
+.modal-overlay {
+  display: none; position: fixed; inset: 0; z-index: 1000;
+  background: rgba(0,0,0,.45); backdrop-filter: blur(2px);
+  justify-content: center; align-items: start; padding: 3vh 1rem;
+  overflow-y: auto;
+}
+.modal-overlay.open { display: flex; }
+.modal {
+  background: var(--surface); border-radius: 12px;
+  box-shadow: 0 20px 60px rgba(0,0,0,.18);
+  width: 100%; max-width: 740px;
+  max-height: 94vh; display: flex; flex-direction: column;
+}
+.modal-header {
+  display: flex; align-items: center; gap: .75rem;
+  padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+.modal-header h2 { font-size: 1rem; font-weight: 700; flex: 1; min-width: 0; }
+.modal-header .modal-id { font-size: .8rem; color: var(--text-secondary); flex-shrink: 0; }
+.modal-close {
+  width: 32px; height: 32px; border: none; background: none;
+  font-size: 1.25rem; color: var(--text-secondary); cursor: pointer;
+  border-radius: 6px; display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.modal-close:hover { background: #f1f5f9; color: var(--text); }
+.modal-body { padding: 1.25rem 1.5rem; overflow-y: auto; flex: 1; min-height: 0; }
+.modal-meta {
+  display: flex; gap: .5rem; flex-wrap: wrap;
+  margin-bottom: 1.25rem; font-size: .8rem;
+}
+.modal-loading { text-align: center; padding: 2rem; color: var(--text-secondary); font-size: .85rem; }
+
+/* Chat messages */
+.msg { margin-bottom: 1.25rem; }
+.msg-label {
+  font-size: .7rem; font-weight: 700; text-transform: uppercase; letter-spacing: .05em;
+  margin-bottom: .4rem; display: flex; align-items: center; gap: .4rem;
+}
+.msg-label-icon {
+  width: 18px; height: 18px; border-radius: 50%;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: .6rem; font-weight: 800; color: #fff; flex-shrink: 0;
+}
+.msg-user .msg-label { color: #1d4ed8; }
+.msg-user .msg-label-icon { background: #3b82f6; }
+.msg-user .msg-content {
+  background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 2px 10px 10px 10px;
+  padding: .85rem 1rem; font-size: .85rem; line-height: 1.7;
+}
+.msg-gemini .msg-label { color: #059669; }
+.msg-gemini .msg-label-icon { background: #10b981; }
+.msg-gemini .msg-content {
+  background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 10px 2px 10px 10px;
+  padding: .85rem 1rem; font-size: .85rem; line-height: 1.7;
+}
+
+/* Markdown content inside messages */
+.msg-content p { margin-bottom: .6rem; }
+.msg-content p:last-child { margin-bottom: 0; }
+.msg-content ul, .msg-content ol { margin: .4rem 0 .6rem 1.25rem; }
+.msg-content li { margin-bottom: .25rem; }
+.msg-content h3, .msg-content h4 { font-size: .9rem; font-weight: 700; margin: .8rem 0 .4rem; }
+.msg-content pre {
+  background: #1e293b; color: #e2e8f0; padding: .75rem 1rem;
+  border-radius: 6px; overflow-x: auto; font-size: .78rem; line-height: 1.5;
+  margin: .5rem 0;
+}
+.msg-content code {
+  background: rgba(0,0,0,.06); padding: .1rem .35rem; border-radius: 3px;
+  font-size: .82em;
+}
+.msg-content pre code { background: none; padding: 0; border-radius: 0; font-size: inherit; }
+.msg-content strong { font-weight: 700; }
+.msg-content hr { border: none; border-top: 1px solid var(--border); margin: .75rem 0; }
+.msg-content blockquote {
+  border-left: 3px solid var(--border); padding-left: .75rem;
+  color: var(--text-secondary); margin: .5rem 0;
+}
+
+.modal-source {
+  display: block; text-align: right; font-size: .75rem;
+  color: var(--text-secondary); margin-top: .5rem; padding-top: .75rem;
+  border-top: 1px solid var(--border);
+}
+.modal-source a { color: var(--accent); text-decoration: none; }
+.modal-source a:hover { text-decoration: underline; }
+</style>
+</head>
+<body>
+
+<nav class="top-nav">
+  <div class="nav-inner">
+    <a href="definitions.html">定義</a>
+    <a href="crosstab.html">クロス集計</a>
+    <a href="hygiene.html">スレッド衛生</a>
+    <a href="rawdata.html" class="active">生データ</a>
+  </div>
+</nav>
+
+<div class="page-scroll">
+<div class="container">
+  <h1>生データ一覧</h1>
+  <p class="page-subtitle">全件リスト。列ヘッダをクリックでソート。行をクリックで会話を表示。</p>
+
+  <div class="toolbar">
+    <input type="search" id="search" placeholder="トピック名・スレッド名を検索…">
+    <select id="filter-input">
+      <option value="">与えた入力：すべて</option>
+      <option value="material">素材あり</option>
+      <option value="contextualized">文脈あり</option>
+      <option value="bare">質問だけ</option>
+    </select>
+    <select id="filter-output">
+      <option value="">期待する出力：すべて</option>
+      <option value="artifact">成果物</option>
+      <option value="understanding">理解</option>
+      <option value="fact">事実</option>
+    </select>
+    <span class="count-label" id="count-label"></span>
+  </div>
+
+  <div class="table-outer">
+    <div class="table-head">
+      <table>
+        <colgroup>
+          <col class="cw-id"><col class="cw-session"><col>
+          <col class="cw-input"><col class="cw-output"><col class="cw-qcount"><col class="cw-tcount">
+        </colgroup>
+        <thead>
+          <tr>
+            <th data-col="id" class="col-id">#<span class="sort-icon"></span></th>
+            <th data-col="session">スレッド名<span class="sort-icon"></span></th>
+            <th data-col="title">トピック<span class="sort-icon"></span></th>
+            <th data-col="input_richness">与えた入力<span class="sort-icon"></span></th>
+            <th data-col="expected_output">期待する出力<span class="sort-icon"></span></th>
+            <th data-col="query_count" class="col-num">クエリ数<span class="sort-icon"></span></th>
+            <th data-col="session_topic_count" class="col-num">スレッド内<br>トピック数<span class="sort-icon"></span></th>
+          </tr>
+        </thead>
+      </table>
+    </div>
+    <div class="table-body-wrap" id="table-wrap">
+      <table aria-hidden="true">
+        <colgroup>
+          <col class="cw-id"><col class="cw-session"><col>
+          <col class="cw-input"><col class="cw-output"><col class="cw-qcount"><col class="cw-tcount">
+        </colgroup>
+        <tbody id="table-body"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- Modal -->
+<div class="modal-overlay" id="modal-overlay">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-id" id="modal-id"></span>
+      <h2 id="modal-title">会話</h2>
+      <button class="modal-close" id="modal-close" title="閉じる">&times;</button>
+    </div>
+    <div class="modal-body" id="modal-body"></div>
+  </div>
+</div>
+
+<script src="topics-list.js"></script>
+<script src="topic-filenames.js"></script>
+<script>
+(function() {
+  var INPUT_LABEL  = { material: '素材あり', contextualized: '文脈あり', bare: '質問だけ' };
+  var OUTPUT_LABEL = { artifact: '成果物', understanding: '理解', fact: '事実' };
+  var fileMap = globalThis.__TOPIC_FILES__;
+
+  var rows = globalThis.__TOPICS_LIST__.slice();
+  var rowById = {};
+  rows.forEach(function(t) { rowById[t.id] = t; });
+
+  var sortCol = 'id';
+  var sortDir = 1;
+  var searchVal = '';
+  var filterInput = '';
+  var filterOutput = '';
+
+  function filtered() {
+    return rows.filter(function(t) {
+      if (filterInput  && t.input_richness  !== filterInput)  return false;
+      if (filterOutput && t.expected_output !== filterOutput) return false;
+      if (searchVal) {
+        var q = searchVal.toLowerCase();
+        if (!t.title.toLowerCase().includes(q) && !t.session.toLowerCase().includes(q)) return false;
+      }
+      return true;
+    });
+  }
+
+  function sorted(arr) {
+    return arr.slice().sort(function(a, b) {
+      var av = a[sortCol], bv = b[sortCol];
+      if (typeof av === 'string') return av.localeCompare(bv, 'ja') * sortDir;
+      return (av - bv) * sortDir;
+    });
+  }
+
+  function render() {
+    var data = sorted(filtered());
+    var tbody = document.getElementById('table-body');
+    if (data.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="7" class="empty-state">該当するトピックが見つかりません</td></tr>';
+    } else {
+      tbody.innerHTML = data.map(function(t) {
+        return '<tr data-id="' + t.id + '">' +
+          '<td class="col-id">' + t.id + '</td>' +
+          '<td><span class="session-text" title="' + esc(t.session) + '">' + esc(t.session) + '</span></td>' +
+          '<td>' + esc(t.title) + '</td>' +
+          '<td><span class="badge badge-' + t.input_richness + '">' + (INPUT_LABEL[t.input_richness] || t.input_richness) + '</span></td>' +
+          '<td><span class="badge badge-' + t.expected_output + '">' + (OUTPUT_LABEL[t.expected_output] || t.expected_output) + '</span></td>' +
+          '<td class="col-num">' + t.query_count + '</td>' +
+          '<td class="col-num">' + t.session_topic_count + '</td>' +
+          '</tr>';
+      }).join('');
+    }
+    document.getElementById('count-label').textContent = data.length + ' / ' + rows.length + ' 件';
+  }
+
+  function esc(s) {
+    return s.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;');
+  }
+
+  function updateSortHeaders() {
+    document.querySelectorAll('th[data-col]').forEach(function(th) {
+      th.classList.remove('sorted-asc', 'sorted-desc');
+      if (th.dataset.col === sortCol) {
+        th.classList.add(sortDir === 1 ? 'sorted-asc' : 'sorted-desc');
+      }
+    });
+  }
+
+  document.querySelectorAll('th[data-col]').forEach(function(th) {
+    th.addEventListener('click', function() {
+      var col = th.dataset.col;
+      if (sortCol === col) { sortDir = -sortDir; } else { sortCol = col; sortDir = 1; }
+      updateSortHeaders();
+      render();
+    });
+  });
+
+  document.getElementById('search').addEventListener('input', function(e) {
+    searchVal = e.target.value.trim();
+    render();
+  });
+  document.getElementById('filter-input').addEventListener('change', function(e) {
+    filterInput = e.target.value;
+    render();
+  });
+  document.getElementById('filter-output').addEventListener('change', function(e) {
+    filterOutput = e.target.value;
+    render();
+  });
+
+  function fitTable() {
+    var wrap = document.getElementById('table-wrap');
+    var top = wrap.getBoundingClientRect().top;
+    wrap.style.maxHeight = Math.max(200, window.innerHeight - top - 16) + 'px';
+  }
+  window.addEventListener('resize', fitTable);
+
+  updateSortHeaders();
+  render();
+  fitTable();
+
+  // ── Modal ──
+  var overlay = document.getElementById('modal-overlay');
+  var modalTitle = document.getElementById('modal-title');
+  var modalId = document.getElementById('modal-id');
+  var modalBody = document.getElementById('modal-body');
+
+  function openModal(id) {
+    var t = rowById[id];
+    if (!t) return;
+    modalId.textContent = '#' + id;
+    modalTitle.textContent = t.title;
+    modalBody.innerHTML =
+      '<div class="modal-meta">' +
+        '<span class="badge badge-' + t.input_richness + '">' + (INPUT_LABEL[t.input_richness] || t.input_richness) + '</span>' +
+        '<span class="badge badge-' + t.expected_output + '">' + (OUTPUT_LABEL[t.expected_output] || t.expected_output) + '</span>' +
+      '</div>' +
+      '<div class="modal-loading">読み込み中…</div>';
+    overlay.classList.add('open');
+    document.body.style.overflow = 'hidden';
+
+    var filename = fileMap && fileMap[String(id)];
+    if (!filename) {
+      modalBody.innerHTML = '<div class="modal-loading">ファイルが見つかりません</div>';
+      return;
+    }
+    fetch('../topics/' + encodeURIComponent(filename))
+      .then(function(r) { return r.text(); })
+      .then(function(md) { renderConversation(md, t); })
+      .catch(function() {
+        modalBody.innerHTML = '<div class="modal-loading">読み込みエラー</div>';
+      });
+  }
+
+  function closeModal() {
+    overlay.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  document.getElementById('modal-close').addEventListener('click', closeModal);
+  overlay.addEventListener('click', function(e) {
+    if (e.target === overlay) closeModal();
+  });
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && overlay.classList.contains('open')) closeModal();
+  });
+
+  // Row click → open modal (delegate from tbody)
+  document.getElementById('table-body').addEventListener('click', function(e) {
+    var tr = e.target.closest('tr[data-id]');
+    if (tr) openModal(Number(tr.dataset.id));
+  });
+
+  // ── Markdown → conversation blocks ──
+  function renderConversation(md, topic) {
+    var sourceUrl = '';
+    var firstLine = md.split('\n')[0];
+    var urlMatch = firstLine.match(/^>\s*From:\s*(https?:\/\/\S+)/);
+    if (urlMatch) sourceUrl = urlMatch[1];
+
+    // Split into turns by "# you asked" and "# gemini response"
+    var parts = md.split(/^# (you asked|gemini response)\s*$/m);
+    // parts: [preamble, "you asked", content, "gemini response", content, ...]
+    var messages = [];
+    for (var i = 1; i < parts.length; i += 2) {
+      var speaker = parts[i].trim() === 'you asked' ? 'user' : 'gemini';
+      var content = (parts[i + 1] || '').trim();
+      // Remove leading/trailing --- separators
+      content = content.replace(/^---\s*/m, '').replace(/\s*---\s*$/m, '').trim();
+      if (content) messages.push({ speaker: speaker, content: content });
+    }
+
+    var html =
+      '<div class="modal-meta">' +
+        '<span class="badge badge-' + topic.input_richness + '">' + (INPUT_LABEL[topic.input_richness] || topic.input_richness) + '</span>' +
+        '<span class="badge badge-' + topic.expected_output + '">' + (OUTPUT_LABEL[topic.expected_output] || topic.expected_output) + '</span>' +
+      '</div>';
+
+    messages.forEach(function(m) {
+      var cls = m.speaker === 'user' ? 'msg-user' : 'msg-gemini';
+      var label = m.speaker === 'user' ? 'You' : 'Gemini';
+      var icon = m.speaker === 'user' ? 'Y' : 'G';
+      html += '<div class="msg ' + cls + '">' +
+        '<div class="msg-label"><span class="msg-label-icon">' + icon + '</span>' + label + '</div>' +
+        '<div class="msg-content">' + mdToHtml(m.content) + '</div>' +
+        '</div>';
+    });
+
+    if (sourceUrl) {
+      html += '<div class="modal-source"><a href="' + esc(sourceUrl) + '" target="_blank" rel="noopener">元の会話を開く</a></div>';
+    }
+
+    modalBody.innerHTML = html;
+  }
+
+  // ── Simple markdown → HTML ──
+  function mdToHtml(md) {
+    md = convertCodeBlocks(md);
+    md = convertInlineCode(md);
+    var lines = md.split('\n');
+    var result = [];
+    var inList = false;
+    var listTag = '';
+    for (var line of lines) {
+      var parsed = parseBlockLine(line, inList, listTag, result);
+      inList = parsed.inList;
+      listTag = parsed.listTag;
+    }
+    if (inList) result.push('</' + listTag + '>');
+    return result.join('\n');
+  }
+
+  function convertCodeBlocks(md) {
+    return md.replaceAll(/```(\w*)\n([\s\S]*?)```/g, function(_, lang, code) {
+      return '<pre><code>' + esc(code.trimEnd()) + '</code></pre>';
+    });
+  }
+  function convertInlineCode(md) {
+    return md.replaceAll(/`([^`]+)`/g, function(_, code) {
+      return '<code>' + esc(code) + '</code>';
+    });
+  }
+
+  function closeList(inList, listTag, result) {
+    if (inList) result.push('</' + listTag + '>');
+    return { inList: false, listTag: '' };
+  }
+
+  function parseBlockLine(line, inList, listTag, result) {
+    if (line.includes('<pre><code>') || line.includes('</code></pre>')) {
+      return closeAndPush(inList, listTag, result, line);
+    }
+    var hMatch = line.match(/^(#{2,4})\s+(.+)$/);
+    if (hMatch) {
+      var level = hMatch[1].length;
+      return closeAndPush(inList, listTag, result, '<h' + level + '>' + inlineFormat(hMatch[2]) + '</h' + level + '>');
+    }
+    if (/^(-{3,}|\*{3,}|_{3,})\s*$/.test(line)) {
+      return closeAndPush(inList, listTag, result, '<hr>');
+    }
+    if (line.startsWith('> ')) {
+      return closeAndPush(inList, listTag, result, '<blockquote>' + inlineFormat(line.substring(2)) + '</blockquote>');
+    }
+    return parseListOrParagraph(line, inList, listTag, result);
+  }
+
+  function closeAndPush(inList, listTag, result, html) {
+    var closed = closeList(inList, listTag, result);
+    result.push(html);
+    return closed;
+  }
+
+  function parseListOrParagraph(line, inList, listTag, result) {
+    var ulMatch = line.match(/^(\s*)[*\-+]\s+(.+)$/);
+    if (ulMatch) return pushListItem(inList, listTag, result, 'ul', ulMatch[2]);
+    var olMatch = line.match(/^(\s*)\d+\.\s+(.+)$/);
+    if (olMatch) return pushListItem(inList, listTag, result, 'ol', olMatch[2]);
+    var closed = closeList(inList, listTag, result);
+    if (line.trim() !== '') result.push('<p>' + inlineFormat(line) + '</p>');
+    return closed;
+  }
+
+  function pushListItem(inList, listTag, result, tag, text) {
+    if (!inList || listTag !== tag) {
+      if (inList) result.push('</' + listTag + '>');
+      result.push('<' + tag + '>');
+    }
+    result.push('<li>' + inlineFormat(text) + '</li>');
+    return { inList: true, listTag: tag };
+  }
+
+  function inlineFormat(s) {
+    s = s.replaceAll(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+    s = s.replaceAll(/\*(.+?)\*/g, '<em>$1</em>');
+    s = s.replaceAll(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
+    return s;
+  }
+}());
+</script>
+</body>
+</html>

@@ -1,0 +1,2177 @@
+{
+  "metadata": {
+    "description": "PdMのAI利用を「与えた入力」×「期待する出力」の2軸で分析し、スレッド衛生を独立指標として記録",
+    "axes": {
+      "input_richness": {
+        "label": "与えた入力",
+        "values": {
+          "material": "素材あり: コード・図・資料・画像など構造化された情報を渡した",
+          "contextualized": "文脈あり: 背景説明や出力形式の指定を添えたが、構造化された素材は渡していない",
+          "bare": "質問だけ: 質問文のみ。背景も素材も形式指定もなし"
+        }
+      },
+      "expected_output": {
+        "label": "期待する出力",
+        "values": {
+          "artifact": "成果物: コード・仕様書・文書・画像など、そのまま使える成果物",
+          "understanding": "理解: 対話を通じて得る知識の深まり・判断材料・設計レビュー",
+          "fact": "事実: 単発の事実・用語・手順・コードスニペット"
+        }
+      },
+      "impact": {
+        "label": "インパクトレベル",
+        "description": "入力×出力の3×3マトリクスから導出",
+        "values": {
+          "co_creation": "共創: 素材×成果物、素材×理解、文脈×成果物。自分の素材や文脈を起点にAIと一緒に作るか設計を深める",
+          "exploration": "探索: 文脈×理解、質問×理解。対話で知識を掘り下げる",
+          "lookup": "検索: いずれか×事実。事実を確認する。1-2回で完結",
+          "trial": "試行: 質問×成果物。指示だけで作らせる。成功率にばらつき"
+        },
+        "matrix": {
+          "material|artifact": "co_creation",
+          "material|understanding": "co_creation",
+          "material|fact": "lookup",
+          "contextualized|artifact": "co_creation",
+          "contextualized|understanding": "exploration",
+          "contextualized|fact": "lookup",
+          "bare|artifact": "trial",
+          "bare|understanding": "exploration",
+          "bare|fact": "lookup"
+        }
+      }
+    },
+    "thread_hygiene": {
+      "label": "スレッド衛生",
+      "description": "1つのスレッド（セッション）に3つ以上のトピックが混在していればcontaminated",
+      "total_sessions": 123,
+      "clean_sessions": 104,
+      "contaminated_sessions": 19,
+      "clean_topic_count": 118,
+      "contaminated_topic_count": 177
+    },
+    "total_topics": 295,
+    "summary": {
+      "input_richness": {
+        "bare": 142,
+        "contextualized": 78,
+        "material": 75
+      },
+      "expected_output": {
+        "fact": 133,
+        "understanding": 90,
+        "artifact": 72
+      },
+      "impact": {
+        "lookup": 133,
+        "exploration": 63,
+        "co_creation": 85,
+        "trial": 14
+      },
+      "thread_contamination": {
+        "clean": 118,
+        "contaminated": 177
+      }
+    },
+    "cross_table": {
+      "material": {
+        "artifact": 41,
+        "understanding": 27,
+        "fact": 7
+      },
+      "contextualized": {
+        "artifact": 17,
+        "understanding": 31,
+        "fact": 30
+      },
+      "bare": {
+        "artifact": 14,
+        "understanding": 32,
+        "fact": 96
+      }
+    },
+    "avg_query_count": {
+      "material": {
+        "artifact": 3,
+        "understanding": 3.9,
+        "fact": 1.7
+      },
+      "contextualized": {
+        "artifact": 2,
+        "understanding": 3.2,
+        "fact": 1.5
+      },
+      "bare": {
+        "artifact": 2.1,
+        "understanding": 3.2,
+        "fact": 1.4
+      }
+    }
+  },
+  "topics": [
+    {
+      "id": 1,
+      "input_richness": "bare",
+      "expected_output": "fact",
+      "impact": "lookup",
+      "thread_contaminated": false
+    },
+    {
+      "id": 2,
+      "input_richness": "bare",
+      "expected_output": "fact",
+      "impact": "lookup",
+      "thread_contaminated": false
+    },
+    {
+      "id": 3,
+      "input_richness": "contextualized",
+      "expected_output": "fact",
+      "impact": "lookup",
+      "thread_contaminated": false
+    },
+    {
+      "id": 4,
+      "input_richness": "bare",
+      "expected_output": "understanding",
+      "impact": "exploration",
+      "thread_contaminated": false
+    },
+    {
+      "id": 5,
+      "input_richness": "material",
+      "expected_output": "artifact",
+      "impact": "co_creation",
+      "thread_contaminated": false
+    },
+    {
+      "id": 6,
+      "input_richness": "contextualized",
+      "expected_output": "understanding",
+      "impact": "exploration",
+      "thread_contaminated": false
+    },
+    {
+      "id": 7,
+      "input_richness": "bare",
+      "expected_output": "understanding",
+      "impact": "exploration",
+      "thread_contaminated": false
+    },
+    {
+      "id": 8,
+      "input_richness": "bare",
+      "expected_output": "fact",
+      "impact": "lookup",
+      "thread_contaminated": false
+    },
+    {
+      "id": 9,
+      "input_richness": "bare",
+      "expected_output": "fact",
+      "impact": "lookup",
+      "thread_contaminated": false
+    },
+    {
+      "id": 10,
+      "input_richness": "bare",
+      "expected_output": "fact",
+      "impact": "lookup",
+      "thread_contaminated": false
+    },
+    {
+      "id": 11,
+      "input_richness": "bare",
+      "expected_output": "artifact",
+      "impact": "trial",
+      "thread_contaminated": false
+    },
+    {
+      "id": 12,
+      "input_richness": "bare",
+      "expected_output": "understanding",
+      "impact": "exploration",
+      "thread_contaminated": false
+    },
+    {
+      "id": 13,
+      "input_richness": "bare",
+      "expected_output": "fact",
+      "impact": "lookup",
+      "thread_contaminated": false
+    },
+    {
+      "id": 14,
+      "input_richness": "contextualized",
+      "expected_output": "understanding",
+      "impact": "exploration",
+      "thread_contaminated": false
+    },
+    {
+      "id": 15,
+      "input_richness": "bare",
+      "expected_output": "fact",
+      "impact": "lookup",
+      "thread_contaminated": false
+    },
+    {
+      "id": 16,
+      "input_richness": "bare",
+      "expected_output": "understanding",
+      "impact": "exploration",
+      "thread_contaminated": false
+    },
+    {
+      "id": 17,
+      "input_richness": "bare",
+      "expected_output": "fact",
+      "impact": "lookup",
+      "thread_contaminated": false
+    },
+    {
+      "id": 18,
+      "input_richness": "material",
+      "expected_output": "understanding",
+      "impact": "co_creation",
+      "thread_contaminated": false
+    },
+    {
+      "id": 19,
+      "input_richness": "bare",
+      "expected_output": "fact",
+      "impact": "lookup",
+      "thread_contaminated": true
+    },
+    {
+      "id": 20,
+      "input_richness": "bare",
+      "expected_output": "fact",
+      "impact": "lookup",
+      "thread_contaminated": true
+    },
+    {
+      "id": 21,
+      "input_richness": "bare",
+      "expected_output": "fact",
+      "impact": "lookup",
+      "thread_contaminated": true
+    },
+    {
+      "id": 22,
+      "input_richness": "bare",
+      "expected_output": "fact",
+      "impact": "lookup",
+      "thread_contaminated": true
+    },
+    {
+      "id": 23,
+      "input_richness": "bare",
+      "expected_output": "fact",
+      "impact": "lookup",
+      "thread_contaminated": true
+    },
+    {
+      "id": 24,
+      "input_richness": "bare",
+      "expected_output": "understanding",
+      "impact": "exploration",
+      "thread_contaminated": true
+    },
+    {
+      "id": 25,
+      "input_richness": "material",
+      "expected_output": "understanding",
+      "impact": "co_creation",
+      "thread_contaminated": true
+    },
+    {
+      "id": 26,
+      "input_richness": "bare",
+      "expected_output": "understanding",
+      "impact": "exploration",
+      "thread_contaminated": true
+    },
+    {
+      "id": 27,
+      "input_richness": "bare",
+      "expected_output": "fact",
+      "impact": "lookup",
+      "thread_contaminated": true
+    },
+    {
+      "id": 28,
+      "input_richness": "bare",
+      "expected_output": "fact",
+      "impact": "lookup",
+      "thread_contaminated": true
+    },
+    {
+      "id": 29,
+      "input_richness": "bare",
+      "expected_output": "fact",
+      "impact": "lookup",
+      "thread_contaminated": true
+    },
+    {
+      "id": 30,
+      "input_richness": "material",
+      "expected_output": "artifact",
+      "impact": "co_creation",
+      "thread_contaminated": false
+    },
+    {
+      "id": 31,
+      "input_richness": "material",
+      "expected_output": "understanding",
+      "impact": "co_creation",
+      "thread_contaminated": false
+    },
+    {
+      "id": 32,
+      "input_richness": "bare",
+      "expected_output": "understanding",
+      "impact": "exploration",
+      "thread_contaminated": false
+    },
+    {
+      "id": 33,
+      "input_richness": "contextualized",
+      "expected_output": "artifact",
+      "impact": "co_creation",
+      "thread_contaminated": false
+    },
+    {
+      "id": 34,
+      "input_richness": "bare",
+      "expected_output": "fact",
+      "impact": "lookup",
+      "thread_contaminated": false
+    },
+    {
+      "id": 35,
+      "input_richness": "bare",
+      "expected_output": "fact",
+      "impact": "lookup",
+      "thread_contaminated": false
+    },
+    {
+      "id": 36,
+      "input_richness": "material",
+      "expected_output": "artifact",
+      "impact": "co_creation",
+      "thread_contaminated": false
+    },
+    {
+      "id": 37,
+      "input_richness": "material",
+      "expected_output": "artifact",
+      "impact": "co_creation",
+      "thread_contaminated": false
+    },
+    {
+      "id": 38,
+      "input_richness": "bare",
+      "expected_output": "fact",
+      "impact": "lookup",
+      "thread_contaminated": false
+    },
+    {
+      "id": 39,
+      "input_richness": "contextualized",
+      "expected_output": "fact",
+      "impact": "lookup",
+      "thread_contaminated": false
+    },
+    {
+      "id": 40,
+      "input_richness": "material",
+      "expected_output": "artifact",
+      "impact": "co_creation",
+      "thread_contaminated": false
+    },
+    {
+      "id": 41,
+      "input_richness": "bare",
+      "expected_output": "fact",
+      "impact": "lookup",
+      "thread_contaminated": false
+    },
+    {
+      "id": 42,
+      "input_richness": "material",
+      "expected_output": "understanding",
+      "impact": "co_creation",
+      "thread_contaminated": true
+    },
+    {
+      "id": 43,
+      "input_richness": "material",
+      "expected_output": "understanding",
+      "impact": "co_creation",
+      "thread_contaminated": true
+    },
+    {
+      "id": 44,
+      "input_richness": "material",
+      "expected_output": "understanding",
+      "impact": "co_creation",
+      "thread_contaminated": true
+    },
+    {
+      "id": 45,
+      "input_richness": "material",
+      "expected_output": "artifact",
+      "impact": "co_creation",
+      "thread_contaminated": true
+    },
+    {
+      "id": 46,
+      "input_richness": "contextualized",
+      "expected_output": "fact",
+      "impact": "lookup",
+      "thread_contaminated": true
+    },
+    {
+      "id": 47,
+      "input_richness": "bare",
+      "expected_output": "fact",
+      "impact": "lookup",
+      "thread_contaminated": true
+    },
+    {
+      "id": 48,
+      "input_richness": "bare",
+      "expected_output": "fact",
+      "impact": "lookup",
+      "thread_contaminated": true
+    },
+    {
+      "id": 49,
+      "input_richness": "contextualized",
+      "expected_output": "artifact",
+      "impact": "co_creation",
+      "thread_contaminated": true
+    },
+    {
+      "id": 50,
+      "input_richness": "bare",
+      "expected_output": "fact",
+      "impact": "lookup",
+      "thread_contaminated": true
+    },
+    {
+      "id": 51,
+      "input_richness": "bare",
+      "expected_output": "fact",
+      "impact": "lookup",
+      "thread_contaminated": true
+    },
+    {
+      "id": 52,
+      "input_richness": "bare",
+      "expected_output": "fact",
+      "impact": "lookup",
+      "thread_contaminated": true
+    },
+    {
+      "id": 53,
+      "input_richness": "bare",
+      "expected_output": "fact",
+      "impact": "lookup",
+      "thread_contaminated": true
+    },
+    {
+      "id": 54,
+      "input_richness": "contextualized",
+      "expected_output": "artifact",
+      "impact": "co_creation",
+      "thread_contaminated": true
+    },
+    {
+      "id": 55,
+      "input_richness": "contextualized",
+      "expected_output": "artifact",
+      "impact": "co_creation",
+      "thread_contaminated": true
+    },
+    {
+      "id": 56,
+      "input_richness": "material",
+      "expected_output": "fact",
+      "impact": "lookup",
+      "thread_contaminated": true
+    },
+    {
+      "id": 57,
+      "input_richness": "bare",
+      "expected_output": "fact",
+      "impact": "lookup",
+      "thread_contaminated": true
+    },
+    {
+      "id": 58,
+      "input_richness": "material",
+      "expected_output": "understanding",
+      "impact": "co_creation",
+      "thread_contaminated": true
+    },
+    {
+      "id": 59,
+      "input_richness": "material",
+      "expected_output": "fact",
+      "impact": "lookup",
+      "thread_contaminated": true
+    },
+    {
+      "id": 60,
+      "input_richness": "contextualized",
+      "expected_output": "artifact",
+      "impact": "co_creation",
+      "thread_contaminated": false
+    },
+    {
+      "id": 61,
+      "input_richness": "material",
+      "expected_output": "understanding",
+      "impact": "co_creation",
+      "thread_contaminated": true
+    },
+    {
+      "id": 62,
+      "input_richness": "bare",
+      "expected_output": "fact",
+      "impact": "lookup",
+      "thread_contaminated": true
+    },
+    {
+      "id": 63,
+      "input_richness": "contextualized",
+      "expected_output": "fact",
+      "impact": "lookup",
+      "thread_contaminated": true
+    },
+    {
+      "id": 64,
+      "input_richness": "contextualized",
+      "expected_output": "understanding",
+      "impact": "exploration",
+      "thread_contaminated": true
+    },
+    {
+      "id": 65,
+      "input_richness": "contextualized",
+      "expected_output": "understanding",
+      "impact": "exploration",
+      "thread_contaminated": true
+    },
+    {
+      "id": 66,
+      "input_richness": "bare",
+      "expected_output": "fact",
+      "impact": "lookup",
+      "thread_contaminated": true
+    },
+    {
+      "id": 67,
+      "input_richness": "contextualized",
+      "expected_output": "understanding",
+      "impact": "exploration",
+      "thread_contaminated": true
+    },
+    {
+      "id": 68,
+      "input_richness": "contextualized",
+      "expected_output": "fact",
+      "impact": "lookup",
+      "thread_contaminated": true
+    },
+    {
+      "id": 69,
+      "input_richness": "bare",
+      "expected_output": "fact",
+      "impact": "lookup",
+      "thread_contaminated": true
+    },
+    {
+      "id": 70,
+      "input_richness": "bare",
+      "expected_output": "fact",
+      "impact": "lookup",
+      "thread_contaminated": true
+    },
+    {
+      "id": 71,
+      "input_richness": "bare",
+      "expected_output": "understanding",
+      "impact": "exploration",
+      "thread_contaminated": true
+    },
+    {
+      "id": 72,
+      "input_richness": "material",
+      "expected_output": "artifact",
+      "impact": "co_creation",
+      "thread_contaminated": true
+    },
+    {
+      "id": 73,
+      "input_richness": "bare",
+      "expected_output": "fact",
+      "impact": "lookup",
+      "thread_contaminated": true
+    },
+    {
+      "id": 74,
+      "input_richness": "material",
+      "expected_output": "fact",
+      "impact": "lookup",
+      "thread_contaminated": true
+    },
+    {
+      "id": 75,
+      "input_richness": "bare",
+      "expected_output": "understanding",
+      "impact": "exploration",
+      "thread_contaminated": true
+    },
+    {
+      "id": 76,
+      "input_richness": "bare",
+      "expected_output": "fact",
+      "impact": "lookup",
+      "thread_contaminated": true
+    },
+    {
+      "id": 77,
+      "input_richness": "material",
+      "expected_output": "understanding",
+      "impact": "co_creation",
+      "thread_contaminated": true
+    },
+    {
+      "id": 78,
+      "input_richness": "bare",
+      "expected_output": "artifact",
+      "impact": "trial",
+      "thread_contaminated": true
+    },
+    {
+      "id": 79,
+      "input_richness": "contextualized",
+      "expected_output": "fact",
+      "impact": "lookup",
+      "thread_contaminated": true
+    },
+    {
+      "id": 80,
+      "input_richness": "contextualized",
+      "expected_output": "fact",
+      "impact": "lookup",
+      "thread_contaminated": true
+    },
+    {
+      "id": 81,
+      "input_richness": "contextualized",
+      "expected_output": "understanding",
+      "impact": "exploration",
+      "thread_contaminated": true
+    },
+    {
+      "id": 82,
+      "input_richness": "bare",
+      "expected_output": "artifact",
+      "impact": "trial",
+      "thread_contaminated": true
+    },
+    {
+      "id": 83,
+      "input_richness": "material",
+      "expected_output": "understanding",
+      "impact": "co_creation",
+      "thread_contaminated": true
+    },
+    {
+      "id": 84,
+      "input_richness": "bare",
+      "expected_output": "fact",
+      "impact": "lookup",
+      "thread_contaminated": true
+    },
+    {
+      "id": 85,
+      "input_richness": "bare",
+      "expected_output": "fact",
+      "impact": "lookup",
+      "thread_contaminated": true
+    },
+    {
+      "id": 86,
+      "input_richness": "bare",
+      "expected_output": "artifact",
+      "impact": "trial",
+      "thread_contaminated": true
+    },
+    {
+      "id": 87,
+      "input_richness": "bare",
+      "expected_output": "fact",
+      "impact": "lookup",
+      "thread_contaminated": true
+    },
+    {
+      "id": 88,
+      "input_richness": "contextualized",
+      "expected_output": "fact",
+      "impact": "lookup",
+      "thread_contaminated": false
+    },
+    {
+      "id": 89,
+      "input_richness": "material",
+      "expected_output": "understanding",
+      "impact": "co_creation",
+      "thread_contaminated": false
+    },
+    {
+      "id": 90,
+      "input_richness": "contextualized",
+      "expected_output": "fact",
+      "impact": "lookup",
+      "thread_contaminated": false
+    },
+    {
+      "id": 91,
+      "input_richness": "contextualized",
+      "expected_output": "artifact",
+      "impact": "co_creation",
+      "thread_contaminated": false
+    },
+    {
+      "id": 92,
+      "input_richness": "material",
+      "expected_output": "artifact",
+      "impact": "co_creation",
+      "thread_contaminated": false
+    },
+    {
+      "id": 93,
+      "input_richness": "contextualized",
+      "expected_output": "fact",
+      "impact": "lookup",
+      "thread_contaminated": false
+    },
+    {
+      "id": 94,
+      "input_richness": "material",
+      "expected_output": "understanding",
+      "impact": "co_creation",
+      "thread_contaminated": false
+    },
+    {
+      "id": 95,
+      "input_richness": "contextualized",
+      "expected_output": "fact",
+      "impact": "lookup",
+      "thread_contaminated": false
+    },
+    {
+      "id": 96,
+      "input_richness": "material",
+      "expected_output": "artifact",
+      "impact": "co_creation",
+      "thread_contaminated": false
+    },
+    {
+      "id": 97,
+      "input_richness": "contextualized",
+      "expected_output": "fact",
+      "impact": "lookup",
+      "thread_contaminated": false
+    },
+    {
+      "id": 98,
+      "input_richness": "bare",
+      "expected_output": "fact",
+      "impact": "lookup",
+      "thread_contaminated": false
+    },
+    {
+      "id": 99,
+      "input_richness": "contextualized",
+      "expected_output": "understanding",
+      "impact": "exploration",
+      "thread_contaminated": true
+    },
+    {
+      "id": 100,
+      "input_richness": "material",
+      "expected_output": "artifact",
+      "impact": "co_creation",
+      "thread_contaminated": true
+    },
+    {
+      "id": 101,
+      "input_richness": "bare",
+      "expected_output": "fact",
+      "impact": "lookup",
+      "thread_contaminated": true
+    },
+    {
+      "id": 102,
+      "input_richness": "material",
+      "expected_output": "artifact",
+      "impact": "co_creation",
+      "thread_contaminated": true
+    },
+    {
+      "id": 103,
+      "input_richness": "material",
+      "expected_output": "artifact",
+      "impact": "co_creation",
+      "thread_contaminated": true
+    },
+    {
+      "id": 104,
+      "input_richness": "contextualized",
+      "expected_output": "understanding",
+      "impact": "exploration",
+      "thread_contaminated": true
+    },
+    {
+      "id": 105,
+      "input_richness": "bare",
+      "expected_output": "understanding",
+      "impact": "exploration",
+      "thread_contaminated": false
+    },
+    {
+      "id": 106,
+      "input_richness": "bare",
+      "expected_output": "fact",
+      "impact": "lookup",
+      "thread_contaminated": false
+    },
+    {
+      "id": 107,
+      "input_richness": "material",
+      "expected_output": "artifact",
+      "impact": "co_creation",
+      "thread_contaminated": false
+    },
+    {
+      "id": 108,
+      "input_richness": "material",
+      "expected_output": "understanding",
+      "impact": "co_creation",
+      "thread_contaminated": false
+    },
+    {
+      "id": 109,
+      "input_richness": "material",
+      "expected_output": "artifact",
+      "impact": "co_creation",
+      "thread_contaminated": false
+    },
+    {
+      "id": 110,
+      "input_richness": "bare",
+      "expected_output": "fact",
+      "impact": "lookup",
+      "thread_contaminated": false
+    },
+    {
+      "id": 111,
+      "input_richness": "bare",
+      "expected_output": "artifact",
+      "impact": "trial",
+      "thread_contaminated": false
+    },
+    {
+      "id": 112,
+      "input_richness": "bare",
+      "expected_output": "artifact",
+      "impact": "trial",
+      "thread_contaminated": false
+    },
+    {
+      "id": 113,
+      "input_richness": "bare",
+      "expected_output": "fact",
+      "impact": "lookup",
+      "thread_contaminated": false
+    },
+    {
+      "id": 114,
+      "input_richness": "contextualized",
+      "expected_output": "fact",
+      "impact": "lookup",
+      "thread_contaminated": false
+    },
+    {
+      "id": 115,
+      "input_richness": "contextualized",
+      "expected_output": "fact",
+      "impact": "lookup",
+      "thread_contaminated": true
+    },
+    {
+      "id": 116,
+      "input_richness": "contextualized",
+      "expected_output": "understanding",
+      "impact": "exploration",
+      "thread_contaminated": true
+    },
+    {
+      "id": 117,
+      "input_richness": "bare",
+      "expected_output": "fact",
+      "impact": "lookup",
+      "thread_contaminated": true
+    },
+    {
+      "id": 118,
+      "input_richness": "bare",
+      "expected_output": "fact",
+      "impact": "lookup",
+      "thread_contaminated": true
+    },
+    {
+      "id": 119,
+      "input_richness": "bare",
+      "expected_output": "fact",
+      "impact": "lookup",
+      "thread_contaminated": true
+    },
+    {
+      "id": 120,
+      "input_richness": "contextualized",
+      "expected_output": "artifact",
+      "impact": "co_creation",
+      "thread_contaminated": false
+    },
+    {
+      "id": 121,
+      "input_richness": "contextualized",
+      "expected_output": "fact",
+      "impact": "lookup",
+      "thread_contaminated": false
+    },
+    {
+      "id": 122,
+      "input_richness": "bare",
+      "expected_output": "artifact",
+      "impact": "trial",
+      "thread_contaminated": false
+    },
+    {
+      "id": 123,
+      "input_richness": "contextualized",
+      "expected_output": "fact",
+      "impact": "lookup",
+      "thread_contaminated": false
+    },
+    {
+      "id": 124,
+      "input_richness": "contextualized",
+      "expected_output": "fact",
+      "impact": "lookup",
+      "thread_contaminated": true
+    },
+    {
+      "id": 125,
+      "input_richness": "contextualized",
+      "expected_output": "fact",
+      "impact": "lookup",
+      "thread_contaminated": true
+    },
+    {
+      "id": 126,
+      "input_richness": "bare",
+      "expected_output": "understanding",
+      "impact": "exploration",
+      "thread_contaminated": true
+    },
+    {
+      "id": 127,
+      "input_richness": "bare",
+      "expected_output": "fact",
+      "impact": "lookup",
+      "thread_contaminated": false
+    },
+    {
+      "id": 128,
+      "input_richness": "material",
+      "expected_output": "artifact",
+      "impact": "co_creation",
+      "thread_contaminated": false
+    },
+    {
+      "id": 129,
+      "input_richness": "material",
+      "expected_output": "artifact",
+      "impact": "co_creation",
+      "thread_contaminated": false
+    },
+    {
+      "id": 130,
+      "input_richness": "bare",
+      "expected_output": "fact",
+      "impact": "lookup",
+      "thread_contaminated": false
+    },
+    {
+      "id": 131,
+      "input_richness": "bare",
+      "expected_output": "understanding",
+      "impact": "exploration",
+      "thread_contaminated": true
+    },
+    {
+      "id": 132,
+      "input_richness": "contextualized",
+      "expected_output": "artifact",
+      "impact": "co_creation",
+      "thread_contaminated": true
+    },
+    {
+      "id": 133,
+      "input_richness": "contextualized",
+      "expected_output": "understanding",
+      "impact": "exploration",
+      "thread_contaminated": true
+    },
+    {
+      "id": 134,
+      "input_richness": "material",
+      "expected_output": "artifact",
+      "impact": "co_creation",
+      "thread_contaminated": false
+    },
+    {
+      "id": 135,
+      "input_richness": "bare",
+      "expected_output": "fact",
+      "impact": "lookup",
+      "thread_contaminated": false
+    },
+    {
+      "id": 136,
+      "input_richness": "contextualized",
+      "expected_output": "fact",
+      "impact": "lookup",
+      "thread_contaminated": false
+    },
+    {
+      "id": 137,
+      "input_richness": "bare",
+      "expected_output": "fact",
+      "impact": "lookup",
+      "thread_contaminated": false
+    },
+    {
+      "id": 138,
+      "input_richness": "bare",
+      "expected_output": "understanding",
+      "impact": "exploration",
+      "thread_contaminated": false
+    },
+    {
+      "id": 139,
+      "input_richness": "contextualized",
+      "expected_output": "artifact",
+      "impact": "co_creation",
+      "thread_contaminated": false
+    },
+    {
+      "id": 140,
+      "input_richness": "contextualized",
+      "expected_output": "understanding",
+      "impact": "exploration",
+      "thread_contaminated": false
+    },
+    {
+      "id": 141,
+      "input_richness": "contextualized",
+      "expected_output": "artifact",
+      "impact": "co_creation",
+      "thread_contaminated": false
+    },
+    {
+      "id": 142,
+      "input_richness": "contextualized",
+      "expected_output": "artifact",
+      "impact": "co_creation",
+      "thread_contaminated": false
+    },
+    {
+      "id": 143,
+      "input_richness": "contextualized",
+      "expected_output": "fact",
+      "impact": "lookup",
+      "thread_contaminated": false
+    },
+    {
+      "id": 144,
+      "input_richness": "bare",
+      "expected_output": "fact",
+      "impact": "lookup",
+      "thread_contaminated": false
+    },
+    {
+      "id": 145,
+      "input_richness": "material",
+      "expected_output": "artifact",
+      "impact": "co_creation",
+      "thread_contaminated": false
+    },
+    {
+      "id": 146,
+      "input_richness": "bare",
+      "expected_output": "understanding",
+      "impact": "exploration",
+      "thread_contaminated": false
+    },
+    {
+      "id": 147,
+      "input_richness": "bare",
+      "expected_output": "understanding",
+      "impact": "exploration",
+      "thread_contaminated": true
+    },
+    {
+      "id": 148,
+      "input_richness": "bare",
+      "expected_output": "fact",
+      "impact": "lookup",
+      "thread_contaminated": true
+    },
+    {
+      "id": 149,
+      "input_richness": "bare",
+      "expected_output": "fact",
+      "impact": "lookup",
+      "thread_contaminated": true
+    },
+    {
+      "id": 150,
+      "input_richness": "material",
+      "expected_output": "understanding",
+      "impact": "co_creation",
+      "thread_contaminated": true
+    },
+    {
+      "id": 151,
+      "input_richness": "bare",
+      "expected_output": "understanding",
+      "impact": "exploration",
+      "thread_contaminated": true
+    },
+    {
+      "id": 152,
+      "input_richness": "contextualized",
+      "expected_output": "understanding",
+      "impact": "exploration",
+      "thread_contaminated": true
+    },
+    {
+      "id": 153,
+      "input_richness": "material",
+      "expected_output": "fact",
+      "impact": "lookup",
+      "thread_contaminated": true
+    },
+    {
+      "id": 154,
+      "input_richness": "material",
+      "expected_output": "artifact",
+      "impact": "co_creation",
+      "thread_contaminated": true
+    },
+    {
+      "id": 155,
+      "input_richness": "bare",
+      "expected_output": "fact",
+      "impact": "lookup",
+      "thread_contaminated": true
+    },
+    {
+      "id": 156,
+      "input_richness": "material",
+      "expected_output": "artifact",
+      "impact": "co_creation",
+      "thread_contaminated": true
+    },
+    {
+      "id": 157,
+      "input_richness": "bare",
+      "expected_output": "fact",
+      "impact": "lookup",
+      "thread_contaminated": true
+    },
+    {
+      "id": 158,
+      "input_richness": "bare",
+      "expected_output": "fact",
+      "impact": "lookup",
+      "thread_contaminated": true
+    },
+    {
+      "id": 159,
+      "input_richness": "material",
+      "expected_output": "artifact",
+      "impact": "co_creation",
+      "thread_contaminated": true
+    },
+    {
+      "id": 160,
+      "input_richness": "contextualized",
+      "expected_output": "understanding",
+      "impact": "exploration",
+      "thread_contaminated": true
+    },
+    {
+      "id": 161,
+      "input_richness": "bare",
+      "expected_output": "fact",
+      "impact": "lookup",
+      "thread_contaminated": true
+    },
+    {
+      "id": 162,
+      "input_richness": "bare",
+      "expected_output": "fact",
+      "impact": "lookup",
+      "thread_contaminated": true
+    },
+    {
+      "id": 163,
+      "input_richness": "bare",
+      "expected_output": "fact",
+      "impact": "lookup",
+      "thread_contaminated": true
+    },
+    {
+      "id": 164,
+      "input_richness": "contextualized",
+      "expected_output": "understanding",
+      "impact": "exploration",
+      "thread_contaminated": true
+    },
+    {
+      "id": 165,
+      "input_richness": "material",
+      "expected_output": "artifact",
+      "impact": "co_creation",
+      "thread_contaminated": false
+    },
+    {
+      "id": 166,
+      "input_richness": "material",
+      "expected_output": "fact",
+      "impact": "lookup",
+      "thread_contaminated": false
+    },
+    {
+      "id": 167,
+      "input_richness": "material",
+      "expected_output": "artifact",
+      "impact": "co_creation",
+      "thread_contaminated": true
+    },
+    {
+      "id": 168,
+      "input_richness": "bare",
+      "expected_output": "fact",
+      "impact": "lookup",
+      "thread_contaminated": true
+    },
+    {
+      "id": 169,
+      "input_richness": "bare",
+      "expected_output": "fact",
+      "impact": "lookup",
+      "thread_contaminated": true
+    },
+    {
+      "id": 170,
+      "input_richness": "bare",
+      "expected_output": "understanding",
+      "impact": "exploration",
+      "thread_contaminated": true
+    },
+    {
+      "id": 171,
+      "input_richness": "bare",
+      "expected_output": "fact",
+      "impact": "lookup",
+      "thread_contaminated": true
+    },
+    {
+      "id": 172,
+      "input_richness": "contextualized",
+      "expected_output": "artifact",
+      "impact": "co_creation",
+      "thread_contaminated": true
+    },
+    {
+      "id": 173,
+      "input_richness": "contextualized",
+      "expected_output": "understanding",
+      "impact": "exploration",
+      "thread_contaminated": true
+    },
+    {
+      "id": 174,
+      "input_richness": "material",
+      "expected_output": "understanding",
+      "impact": "co_creation",
+      "thread_contaminated": true
+    },
+    {
+      "id": 175,
+      "input_richness": "contextualized",
+      "expected_output": "understanding",
+      "impact": "exploration",
+      "thread_contaminated": true
+    },
+    {
+      "id": 176,
+      "input_richness": "bare",
+      "expected_output": "fact",
+      "impact": "lookup",
+      "thread_contaminated": true
+    },
+    {
+      "id": 177,
+      "input_richness": "bare",
+      "expected_output": "fact",
+      "impact": "lookup",
+      "thread_contaminated": false
+    },
+    {
+      "id": 178,
+      "input_richness": "bare",
+      "expected_output": "artifact",
+      "impact": "trial",
+      "thread_contaminated": false
+    },
+    {
+      "id": 179,
+      "input_richness": "bare",
+      "expected_output": "understanding",
+      "impact": "exploration",
+      "thread_contaminated": true
+    },
+    {
+      "id": 180,
+      "input_richness": "bare",
+      "expected_output": "fact",
+      "impact": "lookup",
+      "thread_contaminated": true
+    },
+    {
+      "id": 181,
+      "input_richness": "contextualized",
+      "expected_output": "fact",
+      "impact": "lookup",
+      "thread_contaminated": true
+    },
+    {
+      "id": 182,
+      "input_richness": "contextualized",
+      "expected_output": "understanding",
+      "impact": "exploration",
+      "thread_contaminated": true
+    },
+    {
+      "id": 183,
+      "input_richness": "material",
+      "expected_output": "fact",
+      "impact": "lookup",
+      "thread_contaminated": true
+    },
+    {
+      "id": 184,
+      "input_richness": "contextualized",
+      "expected_output": "understanding",
+      "impact": "exploration",
+      "thread_contaminated": true
+    },
+    {
+      "id": 185,
+      "input_richness": "material",
+      "expected_output": "understanding",
+      "impact": "co_creation",
+      "thread_contaminated": true
+    },
+    {
+      "id": 186,
+      "input_richness": "contextualized",
+      "expected_output": "understanding",
+      "impact": "exploration",
+      "thread_contaminated": true
+    },
+    {
+      "id": 187,
+      "input_richness": "bare",
+      "expected_output": "fact",
+      "impact": "lookup",
+      "thread_contaminated": true
+    },
+    {
+      "id": 188,
+      "input_richness": "contextualized",
+      "expected_output": "understanding",
+      "impact": "exploration",
+      "thread_contaminated": true
+    },
+    {
+      "id": 189,
+      "input_richness": "material",
+      "expected_output": "fact",
+      "impact": "lookup",
+      "thread_contaminated": true
+    },
+    {
+      "id": 190,
+      "input_richness": "bare",
+      "expected_output": "fact",
+      "impact": "lookup",
+      "thread_contaminated": false
+    },
+    {
+      "id": 191,
+      "input_richness": "material",
+      "expected_output": "artifact",
+      "impact": "co_creation",
+      "thread_contaminated": false
+    },
+    {
+      "id": 192,
+      "input_richness": "material",
+      "expected_output": "understanding",
+      "impact": "co_creation",
+      "thread_contaminated": false
+    },
+    {
+      "id": 193,
+      "input_richness": "contextualized",
+      "expected_output": "understanding",
+      "impact": "exploration",
+      "thread_contaminated": true
+    },
+    {
+      "id": 194,
+      "input_richness": "material",
+      "expected_output": "artifact",
+      "impact": "co_creation",
+      "thread_contaminated": true
+    },
+    {
+      "id": 195,
+      "input_richness": "bare",
+      "expected_output": "fact",
+      "impact": "lookup",
+      "thread_contaminated": true
+    },
+    {
+      "id": 196,
+      "input_richness": "material",
+      "expected_output": "artifact",
+      "impact": "co_creation",
+      "thread_contaminated": true
+    },
+    {
+      "id": 197,
+      "input_richness": "bare",
+      "expected_output": "understanding",
+      "impact": "exploration",
+      "thread_contaminated": true
+    },
+    {
+      "id": 198,
+      "input_richness": "material",
+      "expected_output": "artifact",
+      "impact": "co_creation",
+      "thread_contaminated": false
+    },
+    {
+      "id": 199,
+      "input_richness": "bare",
+      "expected_output": "fact",
+      "impact": "lookup",
+      "thread_contaminated": true
+    },
+    {
+      "id": 200,
+      "input_richness": "bare",
+      "expected_output": "understanding",
+      "impact": "exploration",
+      "thread_contaminated": false
+    },
+    {
+      "id": 201,
+      "input_richness": "contextualized",
+      "expected_output": "understanding",
+      "impact": "exploration",
+      "thread_contaminated": false
+    },
+    {
+      "id": 202,
+      "input_richness": "bare",
+      "expected_output": "understanding",
+      "impact": "exploration",
+      "thread_contaminated": false
+    },
+    {
+      "id": 203,
+      "input_richness": "material",
+      "expected_output": "artifact",
+      "impact": "co_creation",
+      "thread_contaminated": false
+    },
+    {
+      "id": 204,
+      "input_richness": "bare",
+      "expected_output": "fact",
+      "impact": "lookup",
+      "thread_contaminated": false
+    },
+    {
+      "id": 205,
+      "input_richness": "contextualized",
+      "expected_output": "fact",
+      "impact": "lookup",
+      "thread_contaminated": false
+    },
+    {
+      "id": 206,
+      "input_richness": "contextualized",
+      "expected_output": "artifact",
+      "impact": "co_creation",
+      "thread_contaminated": false
+    },
+    {
+      "id": 207,
+      "input_richness": "bare",
+      "expected_output": "understanding",
+      "impact": "exploration",
+      "thread_contaminated": false
+    },
+    {
+      "id": 208,
+      "input_richness": "contextualized",
+      "expected_output": "understanding",
+      "impact": "exploration",
+      "thread_contaminated": false
+    },
+    {
+      "id": 209,
+      "input_richness": "contextualized",
+      "expected_output": "artifact",
+      "impact": "co_creation",
+      "thread_contaminated": false
+    },
+    {
+      "id": 210,
+      "input_richness": "bare",
+      "expected_output": "fact",
+      "impact": "lookup",
+      "thread_contaminated": false
+    },
+    {
+      "id": 211,
+      "input_richness": "material",
+      "expected_output": "artifact",
+      "impact": "co_creation",
+      "thread_contaminated": false
+    },
+    {
+      "id": 212,
+      "input_richness": "bare",
+      "expected_output": "fact",
+      "impact": "lookup",
+      "thread_contaminated": false
+    },
+    {
+      "id": 213,
+      "input_richness": "bare",
+      "expected_output": "fact",
+      "impact": "lookup",
+      "thread_contaminated": false
+    },
+    {
+      "id": 214,
+      "input_richness": "bare",
+      "expected_output": "fact",
+      "impact": "lookup",
+      "thread_contaminated": false
+    },
+    {
+      "id": 215,
+      "input_richness": "bare",
+      "expected_output": "fact",
+      "impact": "lookup",
+      "thread_contaminated": false
+    },
+    {
+      "id": 216,
+      "input_richness": "bare",
+      "expected_output": "fact",
+      "impact": "lookup",
+      "thread_contaminated": false
+    },
+    {
+      "id": 217,
+      "input_richness": "contextualized",
+      "expected_output": "understanding",
+      "impact": "exploration",
+      "thread_contaminated": false
+    },
+    {
+      "id": 218,
+      "input_richness": "bare",
+      "expected_output": "fact",
+      "impact": "lookup",
+      "thread_contaminated": false
+    },
+    {
+      "id": 219,
+      "input_richness": "contextualized",
+      "expected_output": "artifact",
+      "impact": "co_creation",
+      "thread_contaminated": false
+    },
+    {
+      "id": 220,
+      "input_richness": "material",
+      "expected_output": "artifact",
+      "impact": "co_creation",
+      "thread_contaminated": true
+    },
+    {
+      "id": 221,
+      "input_richness": "bare",
+      "expected_output": "artifact",
+      "impact": "trial",
+      "thread_contaminated": true
+    },
+    {
+      "id": 222,
+      "input_richness": "bare",
+      "expected_output": "artifact",
+      "impact": "trial",
+      "thread_contaminated": true
+    },
+    {
+      "id": 223,
+      "input_richness": "bare",
+      "expected_output": "understanding",
+      "impact": "exploration",
+      "thread_contaminated": true
+    },
+    {
+      "id": 224,
+      "input_richness": "bare",
+      "expected_output": "artifact",
+      "impact": "trial",
+      "thread_contaminated": true
+    },
+    {
+      "id": 225,
+      "input_richness": "bare",
+      "expected_output": "understanding",
+      "impact": "exploration",
+      "thread_contaminated": true
+    },
+    {
+      "id": 226,
+      "input_richness": "bare",
+      "expected_output": "fact",
+      "impact": "lookup",
+      "thread_contaminated": true
+    },
+    {
+      "id": 227,
+      "input_richness": "contextualized",
+      "expected_output": "fact",
+      "impact": "lookup",
+      "thread_contaminated": true
+    },
+    {
+      "id": 228,
+      "input_richness": "material",
+      "expected_output": "understanding",
+      "impact": "co_creation",
+      "thread_contaminated": true
+    },
+    {
+      "id": 229,
+      "input_richness": "bare",
+      "expected_output": "fact",
+      "impact": "lookup",
+      "thread_contaminated": false
+    },
+    {
+      "id": 230,
+      "input_richness": "material",
+      "expected_output": "artifact",
+      "impact": "co_creation",
+      "thread_contaminated": false
+    },
+    {
+      "id": 231,
+      "input_richness": "material",
+      "expected_output": "artifact",
+      "impact": "co_creation",
+      "thread_contaminated": false
+    },
+    {
+      "id": 232,
+      "input_richness": "bare",
+      "expected_output": "fact",
+      "impact": "lookup",
+      "thread_contaminated": false
+    },
+    {
+      "id": 233,
+      "input_richness": "bare",
+      "expected_output": "fact",
+      "impact": "lookup",
+      "thread_contaminated": false
+    },
+    {
+      "id": 234,
+      "input_richness": "material",
+      "expected_output": "artifact",
+      "impact": "co_creation",
+      "thread_contaminated": false
+    },
+    {
+      "id": 235,
+      "input_richness": "material",
+      "expected_output": "understanding",
+      "impact": "co_creation",
+      "thread_contaminated": false
+    },
+    {
+      "id": 236,
+      "input_richness": "material",
+      "expected_output": "understanding",
+      "impact": "co_creation",
+      "thread_contaminated": false
+    },
+    {
+      "id": 237,
+      "input_richness": "material",
+      "expected_output": "artifact",
+      "impact": "co_creation",
+      "thread_contaminated": true
+    },
+    {
+      "id": 238,
+      "input_richness": "material",
+      "expected_output": "artifact",
+      "impact": "co_creation",
+      "thread_contaminated": true
+    },
+    {
+      "id": 239,
+      "input_richness": "contextualized",
+      "expected_output": "fact",
+      "impact": "lookup",
+      "thread_contaminated": true
+    },
+    {
+      "id": 240,
+      "input_richness": "contextualized",
+      "expected_output": "understanding",
+      "impact": "exploration",
+      "thread_contaminated": true
+    },
+    {
+      "id": 241,
+      "input_richness": "bare",
+      "expected_output": "understanding",
+      "impact": "exploration",
+      "thread_contaminated": true
+    },
+    {
+      "id": 242,
+      "input_richness": "bare",
+      "expected_output": "fact",
+      "impact": "lookup",
+      "thread_contaminated": true
+    },
+    {
+      "id": 243,
+      "input_richness": "contextualized",
+      "expected_output": "understanding",
+      "impact": "exploration",
+      "thread_contaminated": true
+    },
+    {
+      "id": 244,
+      "input_richness": "bare",
+      "expected_output": "understanding",
+      "impact": "exploration",
+      "thread_contaminated": true
+    },
+    {
+      "id": 245,
+      "input_richness": "contextualized",
+      "expected_output": "fact",
+      "impact": "lookup",
+      "thread_contaminated": true
+    },
+    {
+      "id": 246,
+      "input_richness": "bare",
+      "expected_output": "fact",
+      "impact": "lookup",
+      "thread_contaminated": true
+    },
+    {
+      "id": 247,
+      "input_richness": "material",
+      "expected_output": "understanding",
+      "impact": "co_creation",
+      "thread_contaminated": true
+    },
+    {
+      "id": 248,
+      "input_richness": "contextualized",
+      "expected_output": "fact",
+      "impact": "lookup",
+      "thread_contaminated": true
+    },
+    {
+      "id": 249,
+      "input_richness": "contextualized",
+      "expected_output": "fact",
+      "impact": "lookup",
+      "thread_contaminated": true
+    },
+    {
+      "id": 250,
+      "input_richness": "contextualized",
+      "expected_output": "understanding",
+      "impact": "exploration",
+      "thread_contaminated": true
+    },
+    {
+      "id": 251,
+      "input_richness": "contextualized",
+      "expected_output": "fact",
+      "impact": "lookup",
+      "thread_contaminated": true
+    },
+    {
+      "id": 252,
+      "input_richness": "bare",
+      "expected_output": "fact",
+      "impact": "lookup",
+      "thread_contaminated": true
+    },
+    {
+      "id": 253,
+      "input_richness": "contextualized",
+      "expected_output": "fact",
+      "impact": "lookup",
+      "thread_contaminated": true
+    },
+    {
+      "id": 254,
+      "input_richness": "bare",
+      "expected_output": "understanding",
+      "impact": "exploration",
+      "thread_contaminated": true
+    },
+    {
+      "id": 255,
+      "input_richness": "material",
+      "expected_output": "understanding",
+      "impact": "co_creation",
+      "thread_contaminated": true
+    },
+    {
+      "id": 256,
+      "input_richness": "material",
+      "expected_output": "understanding",
+      "impact": "co_creation",
+      "thread_contaminated": true
+    },
+    {
+      "id": 257,
+      "input_richness": "bare",
+      "expected_output": "fact",
+      "impact": "lookup",
+      "thread_contaminated": true
+    },
+    {
+      "id": 258,
+      "input_richness": "material",
+      "expected_output": "understanding",
+      "impact": "co_creation",
+      "thread_contaminated": true
+    },
+    {
+      "id": 259,
+      "input_richness": "material",
+      "expected_output": "artifact",
+      "impact": "co_creation",
+      "thread_contaminated": true
+    },
+    {
+      "id": 260,
+      "input_richness": "material",
+      "expected_output": "artifact",
+      "impact": "co_creation",
+      "thread_contaminated": false
+    },
+    {
+      "id": 261,
+      "input_richness": "bare",
+      "expected_output": "artifact",
+      "impact": "trial",
+      "thread_contaminated": false
+    },
+    {
+      "id": 262,
+      "input_richness": "bare",
+      "expected_output": "fact",
+      "impact": "lookup",
+      "thread_contaminated": false
+    },
+    {
+      "id": 263,
+      "input_richness": "material",
+      "expected_output": "artifact",
+      "impact": "co_creation",
+      "thread_contaminated": true
+    },
+    {
+      "id": 264,
+      "input_richness": "bare",
+      "expected_output": "understanding",
+      "impact": "exploration",
+      "thread_contaminated": true
+    },
+    {
+      "id": 265,
+      "input_richness": "bare",
+      "expected_output": "fact",
+      "impact": "lookup",
+      "thread_contaminated": true
+    },
+    {
+      "id": 266,
+      "input_richness": "bare",
+      "expected_output": "fact",
+      "impact": "lookup",
+      "thread_contaminated": true
+    },
+    {
+      "id": 267,
+      "input_richness": "contextualized",
+      "expected_output": "understanding",
+      "impact": "exploration",
+      "thread_contaminated": true
+    },
+    {
+      "id": 268,
+      "input_richness": "bare",
+      "expected_output": "fact",
+      "impact": "lookup",
+      "thread_contaminated": true
+    },
+    {
+      "id": 269,
+      "input_richness": "bare",
+      "expected_output": "understanding",
+      "impact": "exploration",
+      "thread_contaminated": true
+    },
+    {
+      "id": 270,
+      "input_richness": "contextualized",
+      "expected_output": "artifact",
+      "impact": "co_creation",
+      "thread_contaminated": true
+    },
+    {
+      "id": 271,
+      "input_richness": "material",
+      "expected_output": "understanding",
+      "impact": "co_creation",
+      "thread_contaminated": true
+    },
+    {
+      "id": 272,
+      "input_richness": "bare",
+      "expected_output": "artifact",
+      "impact": "trial",
+      "thread_contaminated": true
+    },
+    {
+      "id": 273,
+      "input_richness": "bare",
+      "expected_output": "fact",
+      "impact": "lookup",
+      "thread_contaminated": false
+    },
+    {
+      "id": 274,
+      "input_richness": "material",
+      "expected_output": "understanding",
+      "impact": "co_creation",
+      "thread_contaminated": false
+    },
+    {
+      "id": 275,
+      "input_richness": "bare",
+      "expected_output": "fact",
+      "impact": "lookup",
+      "thread_contaminated": false
+    },
+    {
+      "id": 276,
+      "input_richness": "contextualized",
+      "expected_output": "understanding",
+      "impact": "exploration",
+      "thread_contaminated": false
+    },
+    {
+      "id": 277,
+      "input_richness": "material",
+      "expected_output": "artifact",
+      "impact": "co_creation",
+      "thread_contaminated": false
+    },
+    {
+      "id": 278,
+      "input_richness": "material",
+      "expected_output": "understanding",
+      "impact": "co_creation",
+      "thread_contaminated": true
+    },
+    {
+      "id": 279,
+      "input_richness": "contextualized",
+      "expected_output": "fact",
+      "impact": "lookup",
+      "thread_contaminated": true
+    },
+    {
+      "id": 280,
+      "input_richness": "bare",
+      "expected_output": "fact",
+      "impact": "lookup",
+      "thread_contaminated": true
+    },
+    {
+      "id": 281,
+      "input_richness": "bare",
+      "expected_output": "understanding",
+      "impact": "exploration",
+      "thread_contaminated": true
+    },
+    {
+      "id": 282,
+      "input_richness": "bare",
+      "expected_output": "understanding",
+      "impact": "exploration",
+      "thread_contaminated": true
+    },
+    {
+      "id": 283,
+      "input_richness": "bare",
+      "expected_output": "fact",
+      "impact": "lookup",
+      "thread_contaminated": true
+    },
+    {
+      "id": 284,
+      "input_richness": "material",
+      "expected_output": "artifact",
+      "impact": "co_creation",
+      "thread_contaminated": true
+    },
+    {
+      "id": 285,
+      "input_richness": "contextualized",
+      "expected_output": "understanding",
+      "impact": "exploration",
+      "thread_contaminated": false
+    },
+    {
+      "id": 286,
+      "input_richness": "contextualized",
+      "expected_output": "understanding",
+      "impact": "exploration",
+      "thread_contaminated": true
+    },
+    {
+      "id": 287,
+      "input_richness": "bare",
+      "expected_output": "fact",
+      "impact": "lookup",
+      "thread_contaminated": true
+    },
+    {
+      "id": 288,
+      "input_richness": "bare",
+      "expected_output": "fact",
+      "impact": "lookup",
+      "thread_contaminated": true
+    },
+    {
+      "id": 289,
+      "input_richness": "material",
+      "expected_output": "artifact",
+      "impact": "co_creation",
+      "thread_contaminated": true
+    },
+    {
+      "id": 290,
+      "input_richness": "bare",
+      "expected_output": "fact",
+      "impact": "lookup",
+      "thread_contaminated": true
+    },
+    {
+      "id": 291,
+      "input_richness": "bare",
+      "expected_output": "artifact",
+      "impact": "trial",
+      "thread_contaminated": true
+    },
+    {
+      "id": 292,
+      "input_richness": "bare",
+      "expected_output": "fact",
+      "impact": "lookup",
+      "thread_contaminated": true
+    },
+    {
+      "id": 293,
+      "input_richness": "bare",
+      "expected_output": "understanding",
+      "impact": "exploration",
+      "thread_contaminated": true
+    },
+    {
+      "id": 294,
+      "input_richness": "bare",
+      "expected_output": "fact",
+      "impact": "lookup",
+      "thread_contaminated": true
+    },
+    {
+      "id": 295,
+      "input_richness": "contextualized",
+      "expected_output": "artifact",
+      "impact": "co_creation",
+      "thread_contaminated": true
+    }
+  ]
+}
