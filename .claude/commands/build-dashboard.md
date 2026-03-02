@@ -80,8 +80,3 @@ cd workspace && npx serve .
 ```
 
 ブラウザで `http://localhost:3000/dashboard/definitions.html` を開く。
-
-## 注意事項
-
-- スキーマの詳細は `2026-03-02-gemini-analytics-tool/data-schema.md` を参照
-- 参考実装: `../2026-02-27-gemini-usage/dashboard/` 内の data-v3.js, topics-list.js, topic-filenames.js
